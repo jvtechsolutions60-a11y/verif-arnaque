@@ -1,0 +1,24 @@
+# Vérif'Arnaque : réglages pour l'hébergement Apache (O2switch)
+# La politique de sécurité interdit à la page d'envoyer quoi que ce soit
+# ailleurs que sur ce site : la promesse « rien n'est envoyé » est garantie
+# par le navigateur lui-même.
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'"
+  Header always set Referrer-Policy "no-referrer"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+</IfModule>
+
+# Types de fichiers du moteur de lecture d'image
+AddType application/wasm .wasm
+<FilesMatch "\.traineddata\.gz$">
+  RemoveEncoding .gz
+  ForceType application/octet-stream
+</FilesMatch>
+
+# Forcer le https
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>

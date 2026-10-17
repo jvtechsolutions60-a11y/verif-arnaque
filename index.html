@@ -403,7 +403,7 @@ var Detecteur = (function () {
 
     R.signaux.forEach(function (s) {
       var t = chercher(s, norm, texte);
-      if (t) trouves.push({ id: s.id, points: s.points, raison: s.raison, extrait: "« " + t + " »" });
+      if (t) trouves.push({ id: s.id, points: s.points, raison: s.raison, conseil: s.conseil, extrait: "« " + t + " »" });
     });
 
     // Majuscules en excès (ajoutées au signal « formulation »)
@@ -508,7 +508,9 @@ if (typeof module !== "undefined") { module.exports = Detecteur; }
     var sc = "Score : " + res.score + " point" + (res.score > 1 ? "s" : "") + " (0 à 2 faible, 3 à 5 moyen, 6 et plus élevé).";
     if (res.regleSecurite) sc += " Le message demande un code, un mot de passe ou un paiement : le risque ne peut pas être faible.";
     document.getElementById("score").textContent = sc;
-    document.getElementById("gestes").innerHTML = GESTES[res.niveau].map(function (g) { return "<li><span>" + g + "</span></li>"; }).join("");
+    // Conseils propres aux signaux repérés, puis gestes du niveau
+    var propres = res.signaux.filter(function (x) { return x.conseil; }).map(function (x) { return echapperHTML(x.conseil); });
+    document.getElementById("gestes").innerHTML = propres.concat(GESTES[res.niveau]).map(function (g) { return "<li><span>" + g + "</span></li>"; }).join("");
     zone.hidden = false;
   }
 

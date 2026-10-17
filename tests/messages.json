@@ -91,6 +91,41 @@
   "texte": "https://laposte-suivi-colis-fr.click/track?id=88412"
  },
  {
+  "id": "A14",
+  "type": "arnaque",
+  "attendu": "moyen",
+  "titre": "Faux proche (premier message)",
+  "texte": "Coucou maman, c'est moi. J'ai cassé mon téléphone, voici mon nouveau numéro. Écris-moi sur WhatsApp stp"
+ },
+ {
+  "id": "A15",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux proche avec demande d'argent",
+  "texte": "Bonjour papa, j'ai changé de numéro, enregistre celui-ci. Tu peux m'aider ? J'ai une facture urgente à régler aujourd'hui"
+ },
+ {
+  "id": "A16",
+  "type": "arnaque",
+  "attendu": "moyen",
+  "titre": "Numéro surtaxé",
+  "texte": "Vous avez un message vocal en attente. Rappelez le 0899 123 456 pour l'écouter."
+ },
+ {
+  "id": "A17",
+  "type": "arnaque",
+  "attendu": "moyen",
+  "titre": "Faux emploi",
+  "texte": "Recrutement : travail à domicile, 300€ par jour, quelques minutes de votre temps. Contactez-nous sur WhatsApp."
+ },
+ {
+  "id": "A18",
+  "type": "arnaque",
+  "attendu": "moyen",
+  "titre": "Faux placement crypto",
+  "texte": "Investissez 250€ en cryptomonnaie et gagnez 3000€ en une semaine, rendement garanti."
+ },
+ {
   "id": "L01",
   "type": "legitime",
   "attendu": "faible",
@@ -159,5 +194,12 @@
   "attendu": "faible",
   "titre": "Newsletter avec lien officiel",
   "texte": "Découvrez nos conseils pour bien choisir votre box internet sur https://www.orange.fr/conseils"
+ },
+ {
+  "id": "L11",
+  "type": "legitime",
+  "attendu": "moyen",
+  "titre": "Vrai changement de numéro (prudence voulue)",
+  "texte": "Salut c'est Paul, voici mon nouveau numéro, bonne soirée"
  }
 ]

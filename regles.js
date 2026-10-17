@@ -33,7 +33,7 @@ var REGLES = {
       points: 2,
       raison: "Le message crée une fausse urgence ou une menace pour vous presser.",
       mots: [
-        "urgent", "urgence", "dernier avis", "dernier rappel", "derniere relance",
+        "urgent", "urgente", "urgence", "dernier avis", "dernier rappel", "derniere relance",
         "dernier delai", "immediatement", "sans delai", "au plus vite", "des que possible",
         "compte bloque", "compte suspendu", "compte desactive", "acces bloque",
         "sera bloque", "sera suspendu", "sera supprime", "sera desactive", "sera cloture",
@@ -107,6 +107,40 @@ var REGLES = {
         "police nationale", "brigade", "europol", "interpol", "mandat d'arret",
         "pedopornographie", "plainte deposee contre vous"
       ]
+    },
+    {
+      id: "faux_proche",
+      points: 3,
+      raison: "Le message reprend le scénario du « faux proche » : un enfant ou un ami qui aurait changé de numéro et demande de l'aide.",
+      conseil: "Appelez votre proche sur son numéro habituel avant de répondre ou d'envoyer de l'argent.",
+      mots: [
+        "nouveau numero", "change de numero", "changer de numero", "mon ancien numero",
+        "casse mon telephone", "perdu mon telephone", "mon telephone est casse",
+        "mon telephone est tombe", "telephone en reparation", "enregistre ce numero",
+        "enregistre mon nouveau", "enregistre celui-ci", "ecris-moi sur whatsapp",
+        "ecris moi sur whatsapp", "contacte-moi sur whatsapp", "c'est moi maman",
+        "c'est moi papa", "maman c'est moi", "papa c'est moi"
+      ]
+    },
+    {
+      id: "numero_surtaxe",
+      points: 3,
+      raison: "Le message vous demande d'appeler un numéro surtaxé (commençant par 089), très coûteux.",
+      conseil: "N'appelez pas ce numéro : il peut vous coûter plusieurs euros par minute.",
+      motifs: ["(^|[^0-9])(\\+33\\s?|0)8[\\s.]?9([\\s.]?\\d){7}($|[^0-9])"]
+    },
+    {
+      id: "argent_facile",
+      points: 3,
+      raison: "Le message promet de l'argent facile : faux emploi, faux placement ou cryptomonnaie.",
+      conseil: "Méfiez-vous de tout gain rapide promis par un inconnu : aucun placement sérieux n'est garanti.",
+      mots: [
+        "travail a domicile", "teletravail remunere", "sans experience", "revenus complementaires",
+        "quelques minutes par jour", "quelques minutes de votre temps", "liker des videos",
+        "investissez", "cryptomonnaie", "crypto-monnaie", "bitcoin", "trading",
+        "rendement garanti", "placement garanti", "gains garantis", "sans risque", "doublez votre"
+      ],
+      motifs: ["\\d+ ?(€|euros?) ?(par|/) ?(jour|heure|h)\\b"]
     },
     {
       id: "gain",

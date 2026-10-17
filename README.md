@@ -9,7 +9,7 @@ Page web gratuite de JVTECH Solutions : on colle un SMS, un mail ou un lien susp
 - `lecture-image.js` : lit le texte d'une capture d'écran (bouton, coller ou glisser-déposer), sur l'appareil. Le moteur n'est chargé qu'au premier ajout d'image.
 - `vendor/tesseract/` : moteur de lecture de texte Tesseract.js 5.1.1 et données françaises (licence Apache 2.0), hébergés avec la page pour qu'aucune image ne parte ailleurs.
 - `logo/` : logo Vérif'Arnaque (fond clair, fond sombre, icône d'onglet). Bleu de marque : #1B4F8C.
-- `tests/` : 23 messages de test (13 arnaques, 10 légitimes) avec le verdict attendu, et le script qui les vérifie.
+- `tests/` : 29 messages de test (18 arnaques, 11 légitimes) avec le verdict attendu, et le script qui les vérifie.
 
 ## Captures d'écran et liens d'images
 
@@ -29,4 +29,4 @@ Relecture des règles conseillée chaque trimestre.
 
 ## Mise en ligne (O2switch)
 
-Déposer `index.html`, `regles.js`, `lecture-image.js` et les dossiers `logo/` et `vendor/` à la racine du sous-domaine (par exemple verif.jvtechsolutions.fr), puis activer le certificat SSL. Le dossier `tests/` n'a pas besoin d'être mis en ligne.
+Déposer `index.html`, `regles.js`, `lecture-image.js`, le fichier `.htaccess` et les dossiers `logo/` et `vendor/` à la racine du sous-domaine (par exemple verif.jvtechsolutions.fr), puis activer le certificat SSL. Le `.htaccess` force le https et interdit à la page tout envoi de données vers un autre site (politique de sécurité du navigateur). Attention : le gestionnaire de fichiers de cPanel masque parfois les fichiers commençant par un point. Le dossier `tests/` n'a pas besoin d'être mis en ligne.

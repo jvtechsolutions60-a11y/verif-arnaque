@@ -1,6 +1,6 @@
 # Résultats des tests
 
-Règles version 2026-10. 23 messages sur 23 ont le verdict attendu.
+Règles version 2026-10. 29 messages sur 29 ont le verdict attendu.
 
 Relancer : `node tests/lancer-tests.js` depuis le dossier du projet. Les messages sont dans `tests/messages.json` (A = arnaque, L = légitime).
 
@@ -19,6 +19,11 @@ Relancer : `node tests/lancer-tests.js` depuis le dossier du projet. Les message
 | A11 | Faux QR code | Moyen | Moyen | 4 | organisme, piece_jointe | oui |
 | A12 | Faux Crédit Agricole | Élevé | Élevé | 7 | domaine_suspect, urgence, organisme | oui |
 | A13 | Lien seul douteux | Moyen | Moyen | 5 | domaine_suspect, organisme | oui |
+| A14 | Faux proche (premier message) | Moyen | Moyen | 3 | faux_proche | oui |
+| A15 | Faux proche avec demande d'argent | Élevé | Élevé | 8 | paiement, faux_proche, urgence | oui |
+| A16 | Numéro surtaxé | Moyen | Moyen | 3 | numero_surtaxe | oui |
+| A17 | Faux emploi | Moyen | Moyen | 3 | argent_facile | oui |
+| A18 | Faux placement crypto | Moyen | Moyen | 3 | argent_facile | oui |
 | L01 | Rendez-vous médical | Faible | Faible | 0 | aucun | oui |
 | L02 | Code de connexion (OTP) | Faible | Faible | 0 | aucun | oui |
 | L03 | Message familial | Faible | Faible | 0 | aucun | oui |
@@ -29,3 +34,4 @@ Relancer : `node tests/lancer-tests.js` depuis le dossier du projet. Les message
 | L08 | Confirmation de commande | Faible | Faible | 2 | urgence | oui |
 | L09 | Facture prélevée, rien à payer | Faible | Faible | 0 | aucun | oui |
 | L10 | Newsletter avec lien officiel | Faible | Faible | 2 | organisme | oui |
+| L11 | Vrai changement de numéro (prudence voulue) | Moyen | Moyen | 3 | faux_proche | oui |
