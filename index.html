@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ce message est-il une arnaque ?</title>
+<link rel="icon" href="logo/logo-icone.svg" type="image/svg+xml">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Collez un SMS, un mail ou un lien suspect : l'analyse se fait sur votre appareil, rien n'est envoyé ni enregistré. Une initiative de JVTECH Solutions.">
+<meta name="robots" content="index,follow">
+<style>
+/* Mise en page : une colonne étroite, lisible au téléphone d'abord.
+   Couleur de marque : bleu de confiance (#1B4F8C), comme le logo.
+   Polices système : aucune police chargée depuis un service externe. */
+:root {
+  --bg: #f5f7f8;
+  --surface: #ffffff;
+  --fg: #17212b;
+  --muted: #55636f;
+  --line: #d6dde2;
+  --accent: #1B4F8C;
+  --marque: #1B4F8C;
+  --accent-fg: #ffffff;
+  --focus: #2f7fd1;
+
+  --ok: #1e7a3c;      --ok-bg: #e5f4ea;
+  --warn: #9a5200;    --warn-bg: #fdf0df;
+  --risk: #b3261e;    --risk-bg: #fbe7e5;
+
+  --font-text: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 10px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11171c; --surface: #19222a; --fg: #e8eef2; --muted: #a2b0bb; --line: #2c3a45;
+    --accent: #7fb3e6; --accent-fg: #0d1a26; --marque: #2a6bb5; --focus: #9cc8f2;
+    --ok: #7fd49a; --ok-bg: #16301f; --warn: #f2b765; --warn-bg: #36260f; --risk: #f39b93; --risk-bg: #3a1916;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11171c; --surface: #19222a; --fg: #e8eef2; --muted: #a2b0bb; --line: #2c3a45;
+  --accent: #7fb3e6; --accent-fg: #0d1a26; --marque: #2a6bb5; --focus: #9cc8f2;
+  --ok: #7fd49a; --ok-bg: #16301f; --warn: #f2b765; --warn-bg: #36260f; --risk: #f39b93; --risk-bg: #3a1916;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 1.0625rem/1.55 var(--font-text);
+}
+.page {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding-block: 2rem 2.5rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.logo {
+  display: inline-flex; align-items: center; gap: .625rem;
+  margin: 0 0 1.25rem; text-decoration: none; color: var(--fg);
+}
+.logo svg { flex: none; }
+.logo-texte { display: flex; flex-direction: column; line-height: 1.1; }
+.logo-nom { font-size: 1.375rem; font-weight: 800; letter-spacing: -.01em; }
+.logo-nom span { color: var(--accent); }
+.logo-sous { font-size: .6875rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: .2rem; }
+h1 {
+  font-size: clamp(1.75rem, 6vw, 2.25rem);
+  line-height: 1.15;
+  margin: 0 0 .75rem;
+  text-wrap: balance;
+}
+h2 { font-size: 1.1875rem; margin: 0; text-wrap: balance; }
+.sous-titre { margin: 0; color: var(--muted); max-width: 34rem; }
+.confiance {
+  display: flex; gap: .5rem; align-items: flex-start;
+  margin: 1rem 0 0; font-size: .9375rem; color: var(--fg);
+}
+.confiance svg { flex: none; margin-top: .2rem; color: var(--ok); }
+
+/* Formulaire */
+.saisie { display: flex; flex-direction: column; gap: .75rem; }
+label[for="message"] { font-weight: 600; }
+textarea {
+  width: 100%;
+  min-height: 9.5rem;
+  resize: vertical;
+  padding: .875rem 1rem;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  line-height: 1.45;
+}
+textarea:focus { border-color: var(--accent); }
+.actions { display: flex; flex-wrap: wrap; gap: .625rem; }
+button {
+  font: inherit; font-weight: 600;
+  min-height: 3rem;
+  padding: .625rem 1.25rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.btn-principal {
+  flex: 1 1 14rem;
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.btn-principal:hover { filter: brightness(1.08); }
+.btn-secondaire {
+  flex: 0 1 auto;
+  border: 1.5px solid var(--line);
+  background: var(--surface);
+  color: var(--fg);
+}
+.exemples { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; font-size: .875rem; color: var(--muted); }
+.exemples button {
+  min-height: 2.25rem; padding: .25rem .75rem; font-weight: 500; font-size: .875rem;
+  border: 1px dashed var(--line); background: transparent; color: var(--fg); border-radius: 999px;
+}
+.erreur { margin: 0; color: var(--risk); font-size: .9375rem; }
+
+/* Résultat */
+.resultat { display: flex; flex-direction: column; gap: 1.25rem; }
+.verdict {
+  display: flex; gap: .875rem; align-items: flex-start;
+  padding: 1rem 1.125rem;
+  border-radius: var(--radius);
+  border: 2px solid currentColor;
+}
+.verdict svg { flex: none; width: 2rem; height: 2rem; }
+.verdict-texte { min-width: 0; color: var(--fg); }
+.verdict-niveau { display: block; font-size: 1.25rem; font-weight: 700; line-height: 1.25; }
+.verdict p { margin: .25rem 0 0; }
+.niveau-faible { color: var(--ok); background: var(--ok-bg); }
+.niveau-moyen  { color: var(--warn); background: var(--warn-bg); }
+.niveau-eleve  { color: var(--risk); background: var(--risk-bg); }
+.verdict .verdict-niveau { color: inherit; }
+.niveau-faible .verdict-niveau { color: var(--ok); }
+.niveau-moyen .verdict-niveau { color: var(--warn); }
+.niveau-eleve .verdict-niveau { color: var(--risk); }
+
+.bloc { display: flex; flex-direction: column; gap: .625rem; }
+.raisons, .gestes { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+.raisons li {
+  padding: .625rem .875rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+}
+.raisons .extrait { display: block; margin-top: .25rem; font-size: .875rem; color: var(--muted); overflow-wrap: anywhere; }
+.raisons .extrait code { font-family: var(--font-mono); font-size: .8125rem; }
+.score { font-size: .875rem; color: var(--muted); margin: 0; font-variant-numeric: tabular-nums; }
+.gestes li { display: flex; gap: .625rem; align-items: flex-start; }
+.gestes li::before {
+  content: ""; flex: none; width: .5rem; height: .5rem; margin-top: .55rem;
+  border-radius: 50%; background: var(--accent);
+}
+.aucune { color: var(--muted); margin: 0; }
+
+/* Bas de page */
+footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; }
+.avertissement {
+  margin: 0; padding: .875rem 1rem;
+  border-left: 3px solid var(--muted);
+  background: var(--surface);
+  color: var(--fg);
+}
+.jvtech {
+  display: flex; flex-direction: column; gap: .25rem;
+  padding-top: 1rem; border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+.jvtech strong { color: var(--fg); }
+.mentions { color: var(--muted); font-size: .8125rem; margin: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .resultat:not([hidden]) { animation: apparition .25s ease-out; }
+  @keyframes apparition { from { opacity: .4; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+}
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header>
+    <a class="logo" href="./" aria-label="Vérif'Arnaque, par JVTECH Solutions">
+      <svg viewBox="0 0 64 64" width="44" height="44" aria-hidden="true">
+        <path d="M32 4 54 11.5V29c0 14.5-9.4 25.2-22 31-12.6-5.8-22-16.5-22-31V11.5z" fill="var(--marque)"></path>
+        <path d="M32 10.5 48 16v13c0 10.6-6.5 18.6-16 23.6V10.5z" fill="#ffffff" fill-opacity=".12"></path>
+        <path d="m21 31.5 7.5 7.5L44 23.5" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span class="logo-texte"><span class="logo-nom">Vérif<span>'Arnaque</span></span><span class="logo-sous">par JVTECH Solutions</span></span>
+    </a>
+    <h1>Ce message est-il une arnaque ?</h1>
+    <p class="sous-titre">Collez un SMS, un mail ou un lien. L'analyse se fait sur votre appareil, rien n'est envoyé ni enregistré.</p>
+    <p class="confiance">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+      <span>Aucun cookie, aucun outil de mesure. Votre message ne quitte pas votre téléphone ou votre ordinateur.</span>
+    </p>
+  </header>
+
+  <form class="saisie" id="formulaire" novalidate>
+    <label for="message">Message ou lien à vérifier</label>
+    <textarea id="message" name="message" autocomplete="off" autocorrect="off" spellcheck="false"
+      placeholder="Exemple : Votre colis est en attente. Réglez 1,99 € de frais de livraison sur…"></textarea>
+    <p class="erreur" id="erreur" hidden>Collez d'abord un message ou un lien dans la zone ci-dessus.</p>
+    <div class="actions">
+      <button type="submit" class="btn-principal" id="analyser">Analyser le message</button>
+      <button type="button" class="btn-secondaire" id="effacer">Effacer</button>
+    </div>
+    <div class="exemples" id="exemples">
+      <span>Essayer avec un exemple :</span>
+      <button type="button" id="ex-colis" data-exemple="colis">Faux colis</button>
+      <button type="button" id="ex-banque" data-exemple="banque">Faux conseiller</button>
+      <button type="button" id="ex-legitime" data-exemple="legitime">Message normal</button>
+    </div>
+  </form>
+
+  <section class="resultat" id="resultat" aria-live="polite" hidden>
+    <div class="verdict" id="verdict">
+      <span id="verdict-icone" aria-hidden="true"></span>
+      <div class="verdict-texte">
+        <span class="verdict-niveau" id="verdict-niveau"></span>
+        <p id="verdict-message"></p>
+      </div>
+    </div>
+
+    <div class="bloc">
+      <h2>Ce que nous avons repéré</h2>
+      <ul class="raisons" id="raisons"></ul>
+      <p class="score" id="score"></p>
+    </div>
+
+    <div class="bloc">
+      <h2>Que faire ?</h2>
+      <ul class="gestes" id="gestes"></ul>
+    </div>
+  </section>
+
+  <footer>
+    <p class="avertissement">Cet outil donne une indication, pas une certitude. En cas de doute, contactez directement l'organisme par son site officiel.</p>
+    <div class="jvtech">
+      <span><strong>Besoin d'aide pour sécuriser vos appareils ?</strong></span>
+      <span>JVTECH Solutions, maintenance et conseil informatique à Beauvais. <a href="https://jvtechsolutions.fr/" rel="noopener">Découvrir JVTECH</a></span>
+    </div>
+    <p class="mentions"><a href="https://jvtechsolutions.fr/mentions-legales/" rel="noopener">Mentions légales</a> · Règles mises à jour : <span id="version-regles">—</span></p>
+  </footer>
+</main>
+
+<!-- Le fichier de règles se modifie sans toucher à cette page -->
+<script src="regles.js"></script>
+
+<script id="moteur">
+/* Moteur d'analyse : applique les règles de regles.js au texte collé.
+   Tout se passe ici, dans le navigateur. Aucune requête réseau. */
+var Detecteur = (function () {
+  function normaliser(t) {
+    return t.normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase().replace(/[’‘`´]/g, "'").replace(/ /g, " ");
+  }
+  function echapper(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  function motVersRegex(m) {
+    return new RegExp("(^|[^a-z0-9])(" + echapper(m).replace(/ +/g, "\\s+") + ")(?=$|[^a-z0-9])", "g");
+  }
+
+  // Une occurrence est-elle niée ? (« ne … jamais », « n'… », « aucun » dans le même bout de phrase)
+  function estNiee(texte, index) {
+    var avant = texte.slice(Math.max(0, index - 70), index);
+    var morceaux = avant.split(/[.,;:!?\n]/);
+    var clause = morceaux[morceaux.length - 1];
+    // « si vous ne payez pas… » est une menace, pas une négation rassurante
+    if (/(^|[^a-z])si\s+(vous|tu)\s+n/.test(clause)) return false;
+    return /(^|[^a-z])(n'|(ne|jamais|aucun|aucune)([^a-z]|$))/.test(clause);
+  }
+
+  function chercher(signal, norm, orig) {
+    var tests = [];
+    (signal.mots || []).forEach(function (m) { tests.push({ re: motVersRegex(m), mot: true }); });
+    (signal.motifs || []).forEach(function (m) { tests.push({ re: new RegExp(m, "g"), mot: false }); });
+    for (var i = 0; i < tests.length; i++) {
+      var re = tests[i].re, r;
+      while ((r = re.exec(norm)) !== null) {
+        var debut = tests[i].mot ? r.index + r[1].length : r.index;
+        var trouve = tests[i].mot ? r[2] : r[0];
+        if (!signal.negation || !estNiee(norm, debut)) {
+          // Extrait du texte d'origine (avec ses accents) quand les positions correspondent
+          return (orig.length === norm.length ? orig.substr(debut, trouve.length) : trouve).trim();
+        }
+        if (re.lastIndex === r.index) re.lastIndex++;
+      }
+    }
+    return null;
+  }
+
+  function extraireLiens(texte, R) {
+    var liens = [], vus = {};
+    var reUrl = /\b((?:https?:\/\/|www\.)[^\s<>"'«»]+)/gi;
+    var tld = R.extensionsConnues.concat(R.extensionsDouteuses).join("|");
+    var reNu = new RegExp("(^|[\\s(«\"'])((?:[a-z0-9-]+\\.)+(?:" + tld + ")(?:\\/[^\\s<>\"'«»]*)?)(?=$|[\\s)»\"',;!?]|\\.(?:\\s|$))", "gi");
+    var m;
+    function ajouter(brut) {
+      brut = brut.replace(/[.,;:!?)»]+$/, "");
+      var schema = /^https?:\/\//i.test(brut) ? brut.split(":")[0].toLowerCase() : null;
+      var sans = brut.replace(/^https?:\/\//i, "");
+      var hote = sans.split(/[\/?#]/)[0].split("@").pop().split(":")[0].toLowerCase().replace(/\.$/, "");
+      if (!hote || vus[hote + schema]) return;
+      vus[hote + schema] = true;
+      liens.push({ brut: brut, schema: schema, hote: hote });
+    }
+    while ((m = reUrl.exec(texte)) !== null) ajouter(m[1]);
+    while ((m = reNu.exec(texte)) !== null) {
+      if (/@/.test(texte.slice(Math.max(0, m.index - 1), m.index + m[0].length).split(/\s/).pop() || "")) continue; // adresse e-mail
+      ajouter(m[2]);
+    }
+    return liens;
+  }
+
+  function finitPar(hote, domaine) { return hote === domaine || hote.slice(-(domaine.length + 1)) === "." + domaine; }
+  function sosies(s) { return s.replace(/0/g, "o").replace(/1/g, "l").replace(/3/g, "e").replace(/4/g, "a").replace(/5/g, "s").replace(/rn/g, "m"); }
+
+  function examinerLien(l, R) {
+    var res = {};
+    var hote = l.hote;
+    var estIP = /^\d{1,3}(\.\d{1,3}){3}$/.test(hote);
+    if (l.schema === "http" || estIP) res.http_ip = l.schema === "http" ? "lien en http, sans le « s » de sécurité : " + l.brut : "adresse chiffrée : " + hote;
+    if (R.raccourcisseurs.some(function (d) { return finitPar(hote, d); })) { res.raccourci = hote; return res; }
+    if (estIP) return res;
+
+    var parties = hote.split(".");
+    var ext = parties[parties.length - 1];
+    var officiel = R.organismes.some(function (o) { return o.officiels.some(function (d) { return finitPar(hote, d); }); });
+    if (!officiel) {
+      var plat = sosies(hote.replace(/[.-]/g, ""));
+      var morceaux = sosies(hote).split(/[.-]/);
+      var imite = null;
+      R.organismes.some(function (o) {
+        return o.cles.some(function (c) {
+          var ok = c.length >= 5 ? plat.indexOf(c) !== -1 : morceaux.indexOf(c) !== -1;
+          if (ok) imite = o;
+          return ok;
+        });
+      });
+      var nomPrincipal = parties.length >= 2 ? parties[parties.length - 2] : hote;
+      var raisons = [];
+      if (imite) raisons.push("« " + hote + " » imite " + imite.nom + " mais n'est pas son site officiel (" + imite.officiels[0] + ")");
+      if ((nomPrincipal.match(/-/g) || []).length >= 2) raisons.push("adresse faite de plusieurs tirets : " + hote);
+      if ((hote.match(/\d/g) || []).length >= 4) raisons.push("adresse remplie de chiffres : " + hote);
+      if (R.extensionsDouteuses.indexOf(ext) !== -1) raisons.push("extension peu utilisée par les organismes français (." + ext + ") : " + hote);
+      if (/xn--/.test(hote)) raisons.push("adresse avec des caractères déguisés : " + hote);
+      if (raisons.length) res.domaine_suspect = raisons[0];
+    }
+    return res;
+  }
+
+  function analyser(texte, R) {
+    R = R || REGLES;
+    texte = texte.normalize("NFC");
+    var norm = normaliser(texte);
+    var trouves = [];
+
+    R.signaux.forEach(function (s) {
+      var t = chercher(s, norm, texte);
+      if (t) trouves.push({ id: s.id, points: s.points, raison: s.raison, extrait: "« " + t + " »" });
+    });
+
+    // Majuscules en excès (ajoutées au signal « formulation »)
+    var lettres = texte.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ]/g, "");
+    var majs = lettres.replace(/[^A-ZÀ-ÖØ-Þ]/g, "");
+    if (lettres.length >= R.majuscules.minLettres && majs.length / lettres.length > R.majuscules.ratio &&
+        !trouves.some(function (t) { return t.id === "formulation"; })) {
+      var f = R.signaux.filter(function (s) { return s.id === "formulation"; })[0];
+      trouves.push({ id: "formulation", points: f.points, raison: f.raison, extrait: "beaucoup de majuscules" });
+    }
+
+    // Liens
+    var liens = extraireLiens(texte, R);
+    ["raccourci", "domaine_suspect", "http_ip"].forEach(function (cle) {
+      for (var i = 0; i < liens.length; i++) {
+        var r = examinerLien(liens[i], R);
+        if (r[cle]) {
+          trouves.push({ id: cle, points: R.liens[cle].points, raison: R.liens[cle].raison, extrait: r[cle] });
+          break;
+        }
+      }
+    });
+
+    var score = trouves.reduce(function (a, t) { return a + t.points; }, 0);
+    var niveau = score >= R.seuils.eleve ? "eleve" : score >= R.seuils.moyen ? "moyen" : "faible";
+    var bloque = trouves.some(function (t) { return R.signauxBloquants.indexOf(t.id) !== -1; });
+    if (niveau === "faible" && bloque) niveau = "moyen";
+    trouves.sort(function (a, b) { return b.points - a.points; });
+    return { niveau: niveau, score: score, signaux: trouves, liens: liens, regleSecurite: bloque && score < R.seuils.moyen };
+  }
+
+  return { analyser: analyser, normaliser: normaliser };
+})();
+if (typeof module !== "undefined") { module.exports = Detecteur; }
+</script>
+
+<script id="interface">
+(function () {
+  if (typeof document === "undefined") return;
+  var TEXTES = {
+    faible: { titre: "Risque faible", message: "Rien d'alarmant repéré. Restez prudent : en cas de doute, passez par le site officiel." },
+    moyen:  { titre: "Risque moyen",  message: "Plusieurs signes douteux. Ne cliquez pas et ne répondez pas avant d'avoir vérifié auprès de l'organisme concerné." },
+    eleve:  { titre: "Risque élevé",  message: "Ce message ressemble fortement à une arnaque. Ne cliquez sur rien, ne donnez aucun code et ne payez rien." }
+  };
+  var L = {
+    l33700: '<a href="https://www.33700.fr/" rel="noopener">33700.fr</a>',
+    cyber: '<a href="https://www.17cyber.gouv.fr/" rel="noopener">17Cyber</a>',
+    spam: '<a href="https://www.signal-spam.fr/" rel="noopener">Signal Spam</a>'
+  };
+  var GESTES = {
+    faible: [
+      "En cas de doute, ne cliquez pas sur le lien : tapez vous-même l'adresse du site officiel ou passez par l'application habituelle.",
+      "Un organisme sérieux ne vous demande jamais un code reçu par SMS, un mot de passe ou votre numéro de carte."
+    ],
+    moyen: [
+      "Ne cliquez pas sur le lien et ne répondez pas.",
+      "Vérifiez auprès de l'organisme par son site officiel ou son numéro habituel, jamais par celui indiqué dans le message.",
+      "S'il s'agit d'un SMS, transférez-le gratuitement au 33700 (" + L.l33700 + ").",
+      "S'il s'agit d'un mail, signalez-le sur " + L.spam + "."
+    ],
+    eleve: [
+      "Ne cliquez sur rien, ne donnez aucun code et ne payez rien.",
+      "Transférez le SMS au 33700 (" + L.l33700 + ") ou signalez le mail sur " + L.spam + ", puis supprimez-le.",
+      "Signalez l'arnaque sur " + L.cyber + ", le service officiel d'aide aux victimes.",
+      "Si vous avez déjà saisi des informations bancaires ou un code, appelez tout de suite votre banque pour bloquer votre carte."
+    ]
+  };
+  var ICONES = {
+    faible: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"></circle><path d="m7.5 12.5 3 3 6-6.5"></path></svg>',
+    moyen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19L12 3z"></path><path d="M12 10v4.5"></path><path d="M12 17.5h.01"></path></svg>',
+    eleve: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.2 2.5h7.6l5.7 5.7v7.6l-5.7 5.7H8.2l-5.7-5.7V8.2z"></path><path d="m9 9 6 6M15 9l-6 6"></path></svg>'
+  };
+  var EXEMPLES = {
+    colis: "Chronopost : votre colis est en attente. Des frais de réexpédition de 1,99€ sont à régler sous 24h, faute de quoi il sera retourné à l'expéditeur : https://chronopost-livraison-suivi.top/fr",
+    banque: "Bonjour, ici le service fraude de votre banque. Une opération suspecte de 1 450 € a été détectée sur votre compte. Pour l'annuler, communiquez-nous le code que vous allez recevoir par SMS et ne raccrochez pas.",
+    legitime: "Bonjour, votre rendez-vous chez le Dr Martin est confirmé pour le mardi 21 octobre à 14 h 30. En cas d'empêchement, merci de prévenir le cabinet."
+  };
+
+  var champ = document.getElementById("message");
+  var zone = document.getElementById("resultat");
+  var erreur = document.getElementById("erreur");
+  document.getElementById("version-regles").textContent = (window.REGLES && REGLES.version) || "inconnue";
+
+  function echapperHTML(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function afficher(res) {
+    var t = TEXTES[res.niveau];
+    var v = document.getElementById("verdict");
+    v.className = "verdict niveau-" + res.niveau;
+    document.getElementById("verdict-icone").innerHTML = ICONES[res.niveau];
+    document.getElementById("verdict-niveau").textContent = t.titre;
+    document.getElementById("verdict-message").textContent = t.message;
+
+    var ul = document.getElementById("raisons");
+    if (res.signaux.length) {
+      ul.innerHTML = res.signaux.map(function (s) {
+        return "<li>" + echapperHTML(s.raison) + '<span class="extrait">Repéré : <code>' + echapperHTML(s.extrait) + "</code></span></li>";
+      }).join("");
+    } else {
+      ul.innerHTML = '<li class="aucune">Aucun des signaux habituels des arnaques n\'a été trouvé.</li>';
+    }
+    var sc = "Score : " + res.score + " point" + (res.score > 1 ? "s" : "") + " (0 à 2 faible, 3 à 5 moyen, 6 et plus élevé).";
+    if (res.regleSecurite) sc += " Le message demande un code, un mot de passe ou un paiement : le risque ne peut pas être faible.";
+    document.getElementById("score").textContent = sc;
+    document.getElementById("gestes").innerHTML = GESTES[res.niveau].map(function (g) { return "<li><span>" + g + "</span></li>"; }).join("");
+    zone.hidden = false;
+  }
+
+  document.getElementById("formulaire").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var texte = champ.value.trim();
+    if (!texte) { erreur.hidden = false; zone.hidden = true; champ.focus(); return; }
+    erreur.hidden = true;
+    afficher(Detecteur.analyser(texte, REGLES));
+    zone.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  document.getElementById("effacer").addEventListener("click", function () {
+    champ.value = ""; zone.hidden = true; erreur.hidden = true; champ.focus();
+  });
+  document.getElementById("exemples").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-exemple]");
+    if (!b) return;
+    champ.value = EXEMPLES[b.getAttribute("data-exemple")];
+    erreur.hidden = true;
+    afficher(Detecteur.analyser(champ.value, REGLES));
+  });
+
+})();
+</script>
+</body>
+</html>

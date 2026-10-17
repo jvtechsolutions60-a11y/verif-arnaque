@@ -1,0 +1,163 @@
+[
+ {
+  "id": "A01",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux colis Chronopost avec frais",
+  "texte": "Chronopost : votre colis est en attente. Des frais de réexpédition de 1,99€ sont à régler sous 24h : https://chronopost-livraison-suivi.top/fr"
+ },
+ {
+  "id": "A02",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux Ameli carte Vitale",
+  "texte": "Assurance Maladie : votre carte Vitale expire bientôt. Pour la renouveler, réglez les frais d'envoi de 2,90€ sur ameli-renouvellement-carte.com"
+ },
+ {
+  "id": "A03",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux remboursement impôts",
+  "texte": "DGFiP : après un dernier calcul de votre taxe, vous êtes éligible à un remboursement de 245,80€. Remplissez le formulaire avant 48h : http://impots-gouv-remboursement.info/demande"
+ },
+ {
+  "id": "A04",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux conseiller bancaire (code)",
+  "texte": "Bonjour, ici le service fraude de votre banque. Une opération suspecte de 1 450 € a été détectée. Pour l'annuler, communiquez-nous le code que vous allez recevoir par SMS."
+ },
+ {
+  "id": "A05",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux CPF",
+  "texte": "Mon Compte Formation : il vous reste 1 200 € sur votre CPF qui seront supprimés le 31/10. Activez vos droits ici : bit.ly/cpf-droits2026"
+ },
+ {
+  "id": "A06",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Fausse amende ANTAI",
+  "texte": "ANTAI : avis de contravention impayée. Réglez votre amende de 35€ avant le 20/10 pour éviter une majoration à 75€ : https://antai-paiement-amende.online"
+ },
+ {
+  "id": "A07",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux mail Netflix",
+  "texte": "Cher client, votre abonnement Netflix est suspendu suite à un problème de paiement. Mettez à jour vos informations de paiement sous 24 heures : https://netf1ix-account-update.com/login"
+ },
+ {
+  "id": "A08",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux gain",
+  "texte": "FELICITATIONS !!! Vous avez gagné un iPhone 17 offert par Orange. Payez seulement 1€ de frais de port pour recevoir votre cadeau : http://198.51.100.24/cadeau"
+ },
+ {
+  "id": "A09",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux policier (convocation)",
+  "texte": "Gendarmerie nationale - Convocation. Une plainte déposée contre vous a été enregistrée. Ouvrez la pièce jointe et répondez dans les 72 heures sous peine de poursuites."
+ },
+ {
+  "id": "A10",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux mail PayPal (mot de passe)",
+  "texte": "PayPal : activité suspecte détectée sur votre compte. Votre compte sera bloqué si vous ne confirmez pas votre identité. Saisissez votre identifiant et votre mot de passe sur paypal-securite-client.xyz"
+ },
+ {
+  "id": "A11",
+  "type": "arnaque",
+  "attendu": "moyen",
+  "titre": "Faux QR code",
+  "texte": "Votre facture EDF est disponible. Scannez le QR code ci-dessous pour accéder à votre espace client et éviter une coupure."
+ },
+ {
+  "id": "A12",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "Faux Crédit Agricole",
+  "texte": "Credit Agricole: Un nouvel appareil a été ajouté à votre compte. Si vous n'êtes pas à l'origine de cette demande, annulez immédiatement : https://ca-securite-annulation.fr/"
+ },
+ {
+  "id": "A13",
+  "type": "arnaque",
+  "attendu": "moyen",
+  "titre": "Lien seul douteux",
+  "texte": "https://laposte-suivi-colis-fr.click/track?id=88412"
+ },
+ {
+  "id": "L01",
+  "type": "legitime",
+  "attendu": "faible",
+  "titre": "Rendez-vous médical",
+  "texte": "Bonjour, votre rendez-vous chez le Dr Martin est confirmé pour le mardi 21 octobre à 14 h 30. En cas d'empêchement, merci de prévenir le cabinet."
+ },
+ {
+  "id": "L02",
+  "type": "legitime",
+  "attendu": "faible",
+  "titre": "Code de connexion (OTP)",
+  "texte": "Votre code de vérification est 482913. Ne le communiquez à personne, même à un conseiller."
+ },
+ {
+  "id": "L03",
+  "type": "legitime",
+  "attendu": "faible",
+  "titre": "Message familial",
+  "texte": "Coucou maman, j'arrive vers 19h ce soir, je ramène le pain. Bisous"
+ },
+ {
+  "id": "L04",
+  "type": "legitime",
+  "attendu": "faible",
+  "titre": "Livraison La Poste normale",
+  "texte": "La Poste : votre Colissimo 6A12345678901 sera livré demain entre 9h et 13h. Suivi sur laposte.fr"
+ },
+ {
+  "id": "L05",
+  "type": "legitime",
+  "attendu": "faible",
+  "titre": "Lien officiel seul",
+  "texte": "https://www.impots.gouv.fr/accueil"
+ },
+ {
+  "id": "L06",
+  "type": "legitime",
+  "attendu": "faible",
+  "titre": "Rappel de sécurité bancaire",
+  "texte": "Votre banque ne vous demandera jamais votre code confidentiel ni votre mot de passe par téléphone ou par SMS."
+ },
+ {
+  "id": "L07",
+  "type": "legitime",
+  "attendu": "faible",
+  "titre": "Mail professionnel",
+  "texte": "Bonjour Julien, je te confirme la réunion de jeudi à 10h au bureau de Beauvais. Peux-tu apporter le compte rendu du dernier chantier ? Merci, Sophie"
+ },
+ {
+  "id": "L08",
+  "type": "legitime",
+  "attendu": "faible",
+  "titre": "Confirmation de commande",
+  "texte": "Merci pour votre commande n°40213 sur notre boutique. Elle sera expédiée sous 3 jours ouvrés. Vous recevrez un mail avec le numéro de suivi."
+ },
+ {
+  "id": "L09",
+  "type": "legitime",
+  "attendu": "faible",
+  "titre": "Facture prélevée, rien à payer",
+  "texte": "Bonjour, vous trouverez votre facture de septembre dans votre espace client. Le montant de 42,90 € sera prélevé le 5 novembre, vous n'avez rien à payer d'ici là."
+ },
+ {
+  "id": "L10",
+  "type": "legitime",
+  "attendu": "faible",
+  "titre": "Newsletter avec lien officiel",
+  "texte": "Découvrez nos conseils pour bien choisir votre box internet sur https://www.orange.fr/conseils"
+ }
+]
