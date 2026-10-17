@@ -8,46 +8,62 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Collez un SMS, un mail ou un lien suspect : l'analyse se fait sur votre appareil, rien n'est envoyé ni enregistré. Une initiative de JVTECH Solutions.">
 <meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0f3561">
 <style>
-/* Mise en page : une colonne étroite, lisible au téléphone d'abord.
-   Couleur de marque : bleu de confiance (#1B4F8C), comme le logo.
+/* Mise en page : un bandeau bleu de confiance en haut, puis une carte de
+   saisie qui le chevauche, le verdict en jauge à trois niveaux, et un bas
+   de page discret. Une seule colonne, pensée pour le téléphone d'abord.
    Polices système : aucune police chargée depuis un service externe. */
 :root {
-  --bg: #f5f7f8;
+  --bg: #f2f5f9;
   --surface: #ffffff;
-  --fg: #17212b;
-  --muted: #55636f;
-  --line: #d6dde2;
+  --surface-2: #f7f9fc;
+  --fg: #0f1f33;
+  --muted: #52637a;
+  --line: #d9e1eb;
   --accent: #1B4F8C;
-  --marque: #1B4F8C;
   --accent-fg: #ffffff;
+  --accent-soft: #e7eef8;
+  --hero: #0f3561;
+  --hero-2: #1B4F8C;
+  --hero-fg: #ffffff;
+  --hero-muted: #c4d5ea;
   --focus: #2f7fd1;
+  --ombre: 0 1px 2px rgba(15, 31, 51, .06), 0 12px 32px -8px rgba(15, 31, 51, .18);
 
-  --ok: #1e7a3c;      --ok-bg: #e5f4ea;
+  --ok: #1d7a3b;      --ok-bg: #e6f4eb;
   --warn: #9a5200;    --warn-bg: #fdf0df;
-  --risk: #b3261e;    --risk-bg: #fbe7e5;
+  --risk: #b3261e;    --risk-bg: #fbe8e6;
 
+  --marque: #1B4F8C;
   --font-text: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --radius: 10px;
+  --radius: 14px;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #11171c; --surface: #19222a; --fg: #e8eef2; --muted: #a2b0bb; --line: #2c3a45;
-    --accent: #7fb3e6; --accent-fg: #0d1a26; --marque: #2a6bb5; --focus: #9cc8f2;
-    --ok: #7fd49a; --ok-bg: #16301f; --warn: #f2b765; --warn-bg: #36260f; --risk: #f39b93; --risk-bg: #3a1916;
+    --bg: #0b131e; --surface: #132133; --surface-2: #0f1b2a; --fg: #e6edf6; --muted: #9fb0c4; --line: #26384f;
+    --accent: #7fb3ea; --accent-fg: #0b1a2c; --accent-soft: #15283f;
+    --hero: #0a2443; --hero-2: #143e70; --hero-fg: #ffffff; --hero-muted: #b4c8e2; --focus: #9cc8f2;
+    --ombre: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -8px rgba(0, 0, 0, .5);
+    --ok: #7fd49a; --ok-bg: #12301d; --warn: #f2b765; --warn-bg: #36260f; --risk: #f39b93; --risk-bg: #3a1916;
+    --marque: #2a6bb5;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #11171c; --surface: #19222a; --fg: #e8eef2; --muted: #a2b0bb; --line: #2c3a45;
-  --accent: #7fb3e6; --accent-fg: #0d1a26; --marque: #2a6bb5; --focus: #9cc8f2;
-  --ok: #7fd49a; --ok-bg: #16301f; --warn: #f2b765; --warn-bg: #36260f; --risk: #f39b93; --risk-bg: #3a1916;
+  --bg: #0b131e; --surface: #132133; --surface-2: #0f1b2a; --fg: #e6edf6; --muted: #9fb0c4; --line: #26384f;
+  --accent: #7fb3ea; --accent-fg: #0b1a2c; --accent-soft: #15283f;
+  --hero: #0a2443; --hero-2: #143e70; --hero-fg: #ffffff; --hero-muted: #b4c8e2; --focus: #9cc8f2;
+  --ombre: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -8px rgba(0, 0, 0, .5);
+  --ok: #7fd49a; --ok-bg: #12301d; --warn: #f2b765; --warn-bg: #36260f; --risk: #f39b93; --risk-bg: #3a1916;
+  --marque: #2a6bb5;
   color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
@@ -55,183 +71,261 @@ body {
   color: var(--fg);
   font: 400 1.0625rem/1.55 var(--font-text);
 }
-.page {
-  max-width: 40rem;
-  margin: 0 auto;
-  padding-block: 2rem 2.5rem;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-}
 a { color: var(--accent); }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
-
-.logo {
-  display: inline-flex; align-items: center; gap: .625rem;
-  margin: 0 0 1.25rem; text-decoration: none; color: var(--fg);
+.conteneur {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-.logo svg { flex: none; }
+h1, h2 { text-wrap: balance; }
+
+/* Bandeau */
+.bandeau {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 85% 0%, var(--hero-2) 0%, var(--hero) 60%);
+  color: var(--hero-fg);
+}
+.bandeau .conteneur { position: relative; padding-block: 1.25rem 5.5rem; }
+.filigrane {
+  position: absolute; right: -3rem; top: 2.5rem;
+  width: 15rem; height: 15rem; opacity: .07; pointer-events: none;
+}
+.logo { display: inline-flex; align-items: center; gap: .625rem; text-decoration: none; color: var(--hero-fg); }
+.logo svg { flex: none; filter: drop-shadow(0 2px 6px rgba(0,0,0,.25)); }
 .logo-texte { display: flex; flex-direction: column; line-height: 1.1; }
-.logo-nom { font-size: 1.375rem; font-weight: 800; letter-spacing: -.01em; }
-.logo-nom span { color: var(--accent); }
-.logo-sous { font-size: .6875rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: .2rem; }
-h1 {
-  font-size: clamp(1.75rem, 6vw, 2.25rem);
-  line-height: 1.15;
-  margin: 0 0 .75rem;
-  text-wrap: balance;
+.logo-nom { font-size: 1.25rem; font-weight: 800; letter-spacing: -.01em; }
+.logo-nom span { color: #9cc4f2; }
+.logo-sous { font-size: .6875rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--hero-muted); margin-top: .2rem; }
+.bandeau h1 {
+  font-size: clamp(2rem, 8vw, 2.875rem);
+  line-height: 1.08;
+  letter-spacing: -.02em;
+  font-weight: 800;
+  margin: 2rem 0 .75rem;
+  max-width: 20ch;
 }
-h2 { font-size: 1.1875rem; margin: 0; text-wrap: balance; }
-.sous-titre { margin: 0; color: var(--muted); max-width: 34rem; }
-.confiance {
-  display: flex; gap: .5rem; align-items: flex-start;
-  margin: 1rem 0 0; font-size: .9375rem; color: var(--fg);
+.sous-titre { margin: 0; color: var(--hero-muted); font-size: 1.0625rem; max-width: 34rem; }
+.garanties { list-style: none; margin: 1.25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.garanties li {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .375rem .75rem; border-radius: 999px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+  font-size: .875rem; font-weight: 600;
 }
-.confiance svg { flex: none; margin-top: .2rem; color: var(--ok); }
+.garanties svg { flex: none; color: #9fe3b5; }
 
-/* Formulaire */
-.saisie { display: flex; flex-direction: column; gap: .75rem; }
-label[for="message"] { font-weight: 600; }
+/* Carte de saisie */
+.principal { display: flex; flex-direction: column; gap: 1.5rem; padding-block: 0 2.5rem; }
+.carte {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--ombre);
+}
+.saisie { margin-top: -4rem; position: relative; padding: 1.25rem; display: flex; flex-direction: column; gap: .875rem; }
+label[for="message"] { font-weight: 700; font-size: 1.0625rem; }
+.depot { display: flex; flex-direction: column; gap: .375rem; }
 textarea {
   width: 100%;
   min-height: 9.5rem;
   resize: vertical;
   padding: .875rem 1rem;
   border: 1.5px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
+  border-radius: 10px;
+  background: var(--surface-2);
   color: var(--fg);
   font: inherit;
   line-height: 1.45;
 }
-textarea:focus { border-color: var(--accent); }
-.actions { display: flex; flex-wrap: wrap; gap: .625rem; }
+textarea::placeholder { color: var(--muted); opacity: .85; }
+textarea:focus { border-color: var(--accent); background: var(--surface); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+.depot.survol textarea { border-color: var(--accent); border-style: dashed; background: var(--accent-soft); }
+.depot-aide { margin: 0; font-size: .875rem; color: var(--muted); }
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: .625rem; }
 button {
   font: inherit; font-weight: 600;
   min-height: 3rem;
-  padding: .625rem 1.25rem;
-  border-radius: var(--radius);
+  padding: .625rem 1rem;
+  border-radius: 10px;
   cursor: pointer;
 }
 .btn-principal {
-  flex: 1 1 14rem;
+  grid-column: 1 / -1;
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 3.5rem;
   border: 0;
   background: var(--accent);
   color: var(--accent-fg);
+  font-size: 1.125rem; font-weight: 700;
+  box-shadow: 0 6px 16px -6px rgba(27, 79, 140, .55);
+  transition: transform .1s ease, filter .15s ease;
 }
 .btn-principal:hover { filter: brightness(1.08); }
+.btn-principal:active { transform: translateY(1px); }
 .btn-secondaire {
-  flex: 0 1 auto;
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
   border: 1.5px solid var(--line);
   background: var(--surface);
   color: var(--fg);
 }
-.exemples { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; font-size: .875rem; color: var(--muted); }
-.exemples button {
-  min-height: 2.25rem; padding: .25rem .75rem; font-weight: 500; font-size: .875rem;
-  border: 1px dashed var(--line); background: transparent; color: var(--fg); border-radius: 999px;
+.btn-secondaire:hover { border-color: var(--accent); color: var(--accent); }
+.exemples {
+  display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+  padding-top: .875rem; border-top: 1px solid var(--line);
+  font-size: .875rem; color: var(--muted);
 }
-.erreur { margin: 0; color: var(--risk); font-size: .9375rem; }
-.btn-secondaire { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; }
-.depot { display: flex; flex-direction: column; gap: .375rem; border-radius: var(--radius); }
-.depot.survol textarea { border-color: var(--accent); border-style: dashed; }
-.depot-aide { margin: 0; font-size: .875rem; color: var(--muted); }
+.exemples span { width: 100%; }
+.exemples button {
+  min-height: 2.25rem; padding: .25rem .875rem; font-weight: 600; font-size: .875rem;
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--fg); border-radius: 999px;
+}
+.exemples button:hover { border-color: var(--accent); color: var(--accent); }
+.erreur { margin: 0; color: var(--risk); font-size: .9375rem; font-weight: 600; }
 .image-etat {
   display: flex; gap: .75rem; align-items: center;
-  padding: .625rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+  padding: .625rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2);
 }
 .image-etat img { width: 3.5rem; height: 3.5rem; object-fit: cover; border-radius: 6px; flex: none; background: var(--bg); }
 .image-etat p { margin: 0; font-size: .9375rem; min-width: 0; }
 .note { margin: 0; padding: .625rem .875rem; font-size: .9375rem; background: var(--warn-bg); color: var(--fg); border-radius: 8px; }
 
 /* Résultat */
-.resultat { display: flex; flex-direction: column; gap: 1.25rem; }
-.verdict {
+.resultat { display: flex; flex-direction: column; gap: 1rem; scroll-margin-top: 1rem; }
+.verdict { overflow: hidden; }
+.verdict-tete {
   display: flex; gap: .875rem; align-items: flex-start;
-  padding: 1rem 1.125rem;
-  border-radius: var(--radius);
-  border: 2px solid currentColor;
+  padding: 1.125rem 1.25rem;
+  border-bottom: 1px solid var(--line);
 }
-.verdict svg { flex: none; width: 2rem; height: 2rem; }
-.verdict-texte { min-width: 0; color: var(--fg); }
-.verdict-niveau { display: block; font-size: 1.25rem; font-weight: 700; line-height: 1.25; }
-.verdict p { margin: .25rem 0 0; }
-.niveau-faible { color: var(--ok); background: var(--ok-bg); }
-.niveau-moyen  { color: var(--warn); background: var(--warn-bg); }
-.niveau-eleve  { color: var(--risk); background: var(--risk-bg); }
-.verdict .verdict-niveau { color: inherit; }
-.niveau-faible .verdict-niveau { color: var(--ok); }
-.niveau-moyen .verdict-niveau { color: var(--warn); }
-.niveau-eleve .verdict-niveau { color: var(--risk); }
+.verdict-tete svg { flex: none; width: 2.5rem; height: 2.5rem; }
+.verdict-texte { min-width: 0; }
+.verdict-niveau { display: block; font-size: 1.5rem; font-weight: 800; line-height: 1.2; letter-spacing: -.01em; }
+.verdict-tete p { margin: .375rem 0 0; color: var(--fg); }
+.niveau-faible .verdict-tete { background: var(--ok-bg); color: var(--ok); }
+.niveau-moyen .verdict-tete { background: var(--warn-bg); color: var(--warn); }
+.niveau-eleve .verdict-tete { background: var(--risk-bg); color: var(--risk); }
 
-.bloc { display: flex; flex-direction: column; gap: .625rem; }
+.jauge { padding: 1rem 1.25rem 1.125rem; display: flex; flex-direction: column; gap: .5rem; }
+.jauge-barres { display: grid; grid-template-columns: repeat(3, 1fr); gap: .375rem; }
+.jauge-barres span {
+  height: .625rem; border-radius: 999px; background: var(--line);
+}
+.jauge-libelles { display: grid; grid-template-columns: repeat(3, 1fr); gap: .375rem; font-size: .8125rem; color: var(--muted); font-weight: 600; }
+.jauge-libelles span:nth-child(2) { text-align: center; }
+.jauge-libelles span:nth-child(3) { text-align: right; }
+.niveau-faible .jauge-barres span:nth-child(1) { background: var(--ok); }
+.niveau-moyen .jauge-barres span:nth-child(-n+2) { background: var(--warn); }
+.niveau-eleve .jauge-barres span { background: var(--risk); }
+.niveau-faible .jauge-libelles span:nth-child(1) { color: var(--ok); }
+.niveau-moyen .jauge-libelles span:nth-child(2) { color: var(--warn); }
+.niveau-eleve .jauge-libelles span:nth-child(3) { color: var(--risk); }
+.score { font-size: .875rem; color: var(--muted); margin: .25rem 0 0; font-variant-numeric: tabular-nums; }
+
+.bloc { padding: 1.125rem 1.25rem 1.25rem; display: flex; flex-direction: column; gap: .75rem; }
+.bloc h2 { font-size: 1.1875rem; margin: 0; }
 .raisons, .gestes { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5rem; }
 .raisons li {
-  padding: .625rem .875rem;
-  background: var(--surface);
+  display: grid; grid-template-columns: 1fr auto; gap: .25rem .75rem; align-items: start;
+  padding: .75rem .875rem;
+  background: var(--surface-2);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 10px;
   min-width: 0;
 }
-.raisons .extrait { display: block; margin-top: .25rem; font-size: .875rem; color: var(--muted); overflow-wrap: anywhere; }
-.raisons .extrait code { font-family: var(--font-mono); font-size: .8125rem; }
-.score { font-size: .875rem; color: var(--muted); margin: 0; font-variant-numeric: tabular-nums; }
-.gestes li { display: flex; gap: .625rem; align-items: flex-start; }
-.gestes li::before {
-  content: ""; flex: none; width: .5rem; height: .5rem; margin-top: .55rem;
-  border-radius: 50%; background: var(--accent);
+.raisons .points {
+  grid-column: 2; grid-row: 1;
+  font-size: .8125rem; font-weight: 700; font-variant-numeric: tabular-nums;
+  padding: .125rem .5rem; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent);
 }
-.aucune { color: var(--muted); margin: 0; }
+.raisons .extrait { grid-column: 1 / -1; font-size: .875rem; color: var(--muted); overflow-wrap: anywhere; }
+.raisons .extrait code { font-family: var(--font-mono); font-size: .8125rem; }
+.raisons li.aucune { display: block; color: var(--muted); }
+.gestes { counter-reset: geste; gap: .75rem; }
+.gestes li { display: flex; gap: .75rem; align-items: flex-start; counter-increment: geste; }
+.gestes li::before {
+  content: counter(geste);
+  flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--accent); color: var(--accent-fg);
+  font-size: .875rem; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.gestes li span { padding-top: .1rem; min-width: 0; }
 
 /* Bas de page */
-footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; }
+footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; padding-bottom: 2rem; }
 .avertissement {
   margin: 0; padding: .875rem 1rem;
-  border-left: 3px solid var(--muted);
-  background: var(--surface);
-  color: var(--fg);
+  display: flex; gap: .625rem; align-items: flex-start;
+  border-radius: 10px; background: var(--surface); border: 1px solid var(--line);
 }
+.avertissement svg { flex: none; margin-top: .15rem; color: var(--muted); }
 .jvtech {
-  display: flex; flex-direction: column; gap: .25rem;
-  padding-top: 1rem; border-top: 1px solid var(--line);
-  color: var(--muted);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .875rem 1.25rem;
+  padding: 1.125rem 1.25rem;
+  border-radius: var(--radius);
+  background: var(--accent-soft);
 }
-.jvtech strong { color: var(--fg); }
-.mentions { color: var(--muted); font-size: .8125rem; margin: 0; }
+.jvtech div { display: flex; flex-direction: column; gap: .2rem; min-width: 0; flex: 1 1 16rem; }
+.jvtech strong { font-size: 1.0625rem; }
+.jvtech span { color: var(--muted); }
+.jvtech a {
+  flex: none; display: inline-flex; align-items: center; min-height: 2.75rem; padding: .5rem 1rem;
+  border-radius: 10px; border: 1.5px solid var(--accent); color: var(--accent);
+  font-weight: 700; text-decoration: none;
+}
+.jvtech a:hover { background: var(--accent); color: var(--accent-fg); }
+.mentions { color: var(--muted); font-size: .8125rem; margin: 0; text-align: center; }
 
+@media (min-width: 720px) {
+  .bandeau .conteneur { padding-block: 1.5rem 6rem; }
+  .bandeau h1 { margin-top: 2.75rem; }
+  .filigrane { right: 2rem; top: 1.5rem; width: 18rem; height: 18rem; }
+  .saisie { padding: 1.75rem; }
+  .actions { grid-template-columns: 2fr 1fr 1fr; }
+  .btn-principal { grid-column: auto; }
+  .exemples span { width: auto; }
+}
 @media (prefers-reduced-motion: no-preference) {
-  .resultat:not([hidden]) { animation: apparition .25s ease-out; }
-  @keyframes apparition { from { opacity: .4; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .resultat:not([hidden]) { animation: apparition .3s ease-out; }
+  @keyframes apparition { from { opacity: .3; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 }
 </style>
 </head>
 <body>
-<main class="page">
-
-  <header>
+<header class="bandeau">
+  <svg class="filigrane" viewBox="0 0 64 64" aria-hidden="true">
+    <path d="M32 4 54 11.5V29c0 14.5-9.4 25.2-22 31-12.6-5.8-22-16.5-22-31V11.5z" fill="#ffffff"></path>
+  </svg>
+  <div class="conteneur">
     <a class="logo" href="./" aria-label="Vérif'Arnaque, par JVTECH Solutions">
-      <svg viewBox="0 0 64 64" width="44" height="44" aria-hidden="true">
+      <svg viewBox="0 0 64 64" width="42" height="42" aria-hidden="true">
         <path d="M32 4 54 11.5V29c0 14.5-9.4 25.2-22 31-12.6-5.8-22-16.5-22-31V11.5z" fill="var(--marque)"></path>
         <path d="M32 10.5 48 16v13c0 10.6-6.5 18.6-16 23.6V10.5z" fill="#ffffff" fill-opacity=".12"></path>
         <path d="m21 31.5 7.5 7.5L44 23.5" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
       <span class="logo-texte"><span class="logo-nom">Vérif<span>'Arnaque</span></span><span class="logo-sous">par JVTECH Solutions</span></span>
     </a>
-    <h1>Ce message est-il une arnaque ?</h1>
+    <h1>Ce message est‑il une arnaque&nbsp;?</h1>
     <p class="sous-titre">Collez un SMS, un mail ou un lien. L'analyse se fait sur votre appareil, rien n'est envoyé ni enregistré.</p>
-    <p class="confiance">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
-      <span>Aucun cookie, aucun outil de mesure. Votre message ne quitte pas votre téléphone ou votre ordinateur.</span>
-    </p>
-  </header>
+    <ul class="garanties">
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>Rien n'est envoyé</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>Aucun cookie</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>Gratuit</li>
+    </ul>
+  </div>
+</header>
 
-  <form class="saisie" id="formulaire" novalidate>
+<main class="conteneur principal">
+
+  <form class="carte saisie" id="formulaire" novalidate>
     <label for="message">Message ou lien à vérifier</label>
     <div class="depot" id="depot">
-    <textarea id="message" name="message" autocomplete="off" autocorrect="off" spellcheck="false"
-      placeholder="Exemple : Votre colis est en attente. Réglez 1,99 € de frais de livraison sur…"></textarea>
+      <textarea id="message" name="message" autocomplete="off" autocorrect="off" spellcheck="false"
+        placeholder="Exemple : Votre colis est en attente. Réglez 1,99 € de frais de livraison sur…"></textarea>
       <p class="depot-aide" id="depot-aide">Vous pouvez aussi coller ou glisser ici une capture d'écran du message.</p>
     </div>
     <div class="image-etat" id="image-etat" hidden>
@@ -241,16 +335,19 @@ footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; 
     <p class="note" id="note-lien-image" hidden>Ce lien semble mener à une image. Nous ne l'ouvrons pas : ouvrir une image envoyée par un inconnu peut prévenir l'escroc que votre numéro ou votre adresse est actif. Faites plutôt une capture d'écran du message et ajoutez-la.</p>
     <p class="erreur" id="erreur" hidden>Collez d'abord un message ou un lien dans la zone ci-dessus.</p>
     <div class="actions">
-      <button type="submit" class="btn-principal" id="analyser">Analyser le message</button>
+      <button type="submit" class="btn-principal" id="analyser">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 20 5.3v6.2c0 5-3.4 8.7-8 10.5-4.6-1.8-8-5.5-8-10.5V5.3z"></path><path d="m8.5 12 2.5 2.5 4.5-5"></path></svg>
+        Analyser le message
+      </button>
       <button type="button" class="btn-secondaire" id="ajouter-image">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="m21 17-5-5-8 8"></path></svg>
-        Ajouter une capture
+        Capture
       </button>
       <button type="button" class="btn-secondaire" id="effacer">Effacer</button>
       <input type="file" id="fichier-image" accept="image/*" hidden>
     </div>
     <div class="exemples" id="exemples">
-      <span>Essayer avec un exemple :</span>
+      <span>Pas de message sous la main ? Essayez un exemple :</span>
       <button type="button" id="ex-colis" data-exemple="colis">Faux colis</button>
       <button type="button" id="ex-banque" data-exemple="banque">Faux conseiller</button>
       <button type="button" id="ex-legitime" data-exemple="legitime">Message normal</button>
@@ -258,31 +355,43 @@ footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; 
   </form>
 
   <section class="resultat" id="resultat" aria-live="polite" hidden>
-    <div class="verdict" id="verdict">
-      <span id="verdict-icone" aria-hidden="true"></span>
-      <div class="verdict-texte">
-        <span class="verdict-niveau" id="verdict-niveau"></span>
-        <p id="verdict-message"></p>
+    <div class="carte verdict" id="verdict">
+      <div class="verdict-tete">
+        <span id="verdict-icone" aria-hidden="true"></span>
+        <div class="verdict-texte">
+          <span class="verdict-niveau" id="verdict-niveau"></span>
+          <p id="verdict-message"></p>
+        </div>
+      </div>
+      <div class="jauge" aria-hidden="true">
+        <div class="jauge-barres"><span></span><span></span><span></span></div>
+        <div class="jauge-libelles"><span>Faible</span><span>Moyen</span><span>Élevé</span></div>
+        <p class="score" id="score"></p>
       </div>
     </div>
 
-    <div class="bloc">
+    <div class="carte bloc">
       <h2>Ce que nous avons repéré</h2>
       <ul class="raisons" id="raisons"></ul>
-      <p class="score" id="score"></p>
     </div>
 
-    <div class="bloc">
+    <div class="carte bloc">
       <h2>Que faire ?</h2>
-      <ul class="gestes" id="gestes"></ul>
+      <ol class="gestes" id="gestes"></ol>
     </div>
   </section>
 
   <footer>
-    <p class="avertissement">Cet outil donne une indication, pas une certitude. En cas de doute, contactez directement l'organisme par son site officiel.</p>
+    <p class="avertissement">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"></circle><path d="M12 11v5.5"></path><path d="M12 7.5h.01"></path></svg>
+      <span>Cet outil donne une indication, pas une certitude. En cas de doute, contactez directement l'organisme par son site officiel.</span>
+    </p>
     <div class="jvtech">
-      <span><strong>Besoin d'aide pour sécuriser vos appareils ?</strong></span>
-      <span>JVTECH Solutions, maintenance et conseil informatique à Beauvais. <a href="https://jvtechsolutions.fr/" rel="noopener">Découvrir JVTECH</a></span>
+      <div>
+        <strong>Besoin d'aide pour sécuriser vos appareils ?</strong>
+        <span>JVTECH Solutions, maintenance et conseil informatique à Beauvais.</span>
+      </div>
+      <a href="https://jvtechsolutions.fr/" rel="noopener">Découvrir JVTECH</a>
     </div>
     <p class="mentions"><a href="https://jvtechsolutions.fr/mentions-legales/" rel="noopener">Mentions légales</a> · Règles mises à jour : <span id="version-regles">—</span></p>
   </footer>
@@ -492,7 +601,7 @@ if (typeof module !== "undefined") { module.exports = Detecteur; }
   function afficher(res) {
     var t = TEXTES[res.niveau];
     var v = document.getElementById("verdict");
-    v.className = "verdict niveau-" + res.niveau;
+    v.className = "carte verdict niveau-" + res.niveau;
     document.getElementById("verdict-icone").innerHTML = ICONES[res.niveau];
     document.getElementById("verdict-niveau").textContent = t.titre;
     document.getElementById("verdict-message").textContent = t.message;
@@ -500,12 +609,12 @@ if (typeof module !== "undefined") { module.exports = Detecteur; }
     var ul = document.getElementById("raisons");
     if (res.signaux.length) {
       ul.innerHTML = res.signaux.map(function (s) {
-        return "<li>" + echapperHTML(s.raison) + '<span class="extrait">Repéré : <code>' + echapperHTML(s.extrait) + "</code></span></li>";
+        return "<li><span>" + echapperHTML(s.raison) + '</span><span class="points">+' + s.points + '</span><span class="extrait">Repéré : <code>' + echapperHTML(s.extrait) + "</code></span></li>";
       }).join("");
     } else {
       ul.innerHTML = '<li class="aucune">Aucun des signaux habituels des arnaques n\'a été trouvé.</li>';
     }
-    var sc = "Score : " + res.score + " point" + (res.score > 1 ? "s" : "") + " (0 à 2 faible, 3 à 5 moyen, 6 et plus élevé).";
+    var sc = res.score + " point" + (res.score > 1 ? "s" : "") + " de risque (0 à 2 faible, 3 à 5 moyen, 6 et plus élevé).";
     if (res.regleSecurite) sc += " Le message demande un code, un mot de passe ou un paiement : le risque ne peut pas être faible.";
     document.getElementById("score").textContent = sc;
     // Conseils propres aux signaux repérés, puis gestes du niveau
