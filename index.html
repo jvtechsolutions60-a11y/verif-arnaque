@@ -134,6 +134,17 @@ button {
   border: 1px dashed var(--line); background: transparent; color: var(--fg); border-radius: 999px;
 }
 .erreur { margin: 0; color: var(--risk); font-size: .9375rem; }
+.btn-secondaire { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; }
+.depot { display: flex; flex-direction: column; gap: .375rem; border-radius: var(--radius); }
+.depot.survol textarea { border-color: var(--accent); border-style: dashed; }
+.depot-aide { margin: 0; font-size: .875rem; color: var(--muted); }
+.image-etat {
+  display: flex; gap: .75rem; align-items: center;
+  padding: .625rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+}
+.image-etat img { width: 3.5rem; height: 3.5rem; object-fit: cover; border-radius: 6px; flex: none; background: var(--bg); }
+.image-etat p { margin: 0; font-size: .9375rem; min-width: 0; }
+.note { margin: 0; padding: .625rem .875rem; font-size: .9375rem; background: var(--warn-bg); color: var(--fg); border-radius: 8px; }
 
 /* Résultat */
 .resultat { display: flex; flex-direction: column; gap: 1.25rem; }
@@ -218,12 +229,25 @@ footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; 
 
   <form class="saisie" id="formulaire" novalidate>
     <label for="message">Message ou lien à vérifier</label>
+    <div class="depot" id="depot">
     <textarea id="message" name="message" autocomplete="off" autocorrect="off" spellcheck="false"
       placeholder="Exemple : Votre colis est en attente. Réglez 1,99 € de frais de livraison sur…"></textarea>
+      <p class="depot-aide" id="depot-aide">Vous pouvez aussi coller ou glisser ici une capture d'écran du message.</p>
+    </div>
+    <div class="image-etat" id="image-etat" hidden>
+      <img id="image-apercu" alt="Capture d'écran ajoutée">
+      <p id="image-message" role="status"></p>
+    </div>
+    <p class="note" id="note-lien-image" hidden>Ce lien semble mener à une image. Nous ne l'ouvrons pas : ouvrir une image envoyée par un inconnu peut prévenir l'escroc que votre numéro ou votre adresse est actif. Faites plutôt une capture d'écran du message et ajoutez-la.</p>
     <p class="erreur" id="erreur" hidden>Collez d'abord un message ou un lien dans la zone ci-dessus.</p>
     <div class="actions">
       <button type="submit" class="btn-principal" id="analyser">Analyser le message</button>
+      <button type="button" class="btn-secondaire" id="ajouter-image">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="m21 17-5-5-8 8"></path></svg>
+        Ajouter une capture
+      </button>
       <button type="button" class="btn-secondaire" id="effacer">Effacer</button>
+      <input type="file" id="fichier-image" accept="image/*" hidden>
     </div>
     <div class="exemples" id="exemples">
       <span>Essayer avec un exemple :</span>
@@ -266,6 +290,8 @@ footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; 
 
 <!-- Le fichier de règles se modifie sans toucher à cette page -->
 <script src="regles.js"></script>
+<!-- Lecture du texte des captures d'écran, sur l'appareil -->
+<script src="lecture-image.js"></script>
 
 <script id="moteur">
 /* Moteur d'analyse : applique les règles de regles.js au texte collé.
@@ -491,12 +517,74 @@ if (typeof module !== "undefined") { module.exports = Detecteur; }
     var texte = champ.value.trim();
     if (!texte) { erreur.hidden = false; zone.hidden = true; champ.focus(); return; }
     erreur.hidden = true;
+    verifierLienImage();
     afficher(Detecteur.analyser(texte, REGLES));
     zone.scrollIntoView({ behavior: "smooth", block: "start" });
   });
   document.getElementById("effacer").addEventListener("click", function () {
-    champ.value = ""; zone.hidden = true; erreur.hidden = true; champ.focus();
+    champ.value = ""; zone.hidden = true; erreur.hidden = true;
+    etatImage.hidden = true; apercu.removeAttribute("src"); noteLienImage.hidden = true;
+    champ.focus();
   });
+
+  /* Captures d'écran : le texte est lu sur l'appareil, l'image n'est jamais envoyée */
+  var etatImage = document.getElementById("image-etat");
+  var apercu = document.getElementById("image-apercu");
+  var msgImage = document.getElementById("image-message");
+  var noteLienImage = document.getElementById("note-lien-image");
+  var depot = document.getElementById("depot");
+  var fichier = document.getElementById("fichier-image");
+  var lectureEnCours = false;
+
+  function traiterImage(f) {
+    if (!f || !/^image\//.test(f.type) || lectureEnCours) return;
+    if (!window.LectureImage) { msgImage.textContent = "La lecture des images n'est pas disponible sur cette page."; etatImage.hidden = false; return; }
+    lectureEnCours = true;
+    erreur.hidden = true; zone.hidden = true; noteLienImage.hidden = true;
+    if (apercu.src) URL.revokeObjectURL(apercu.src);
+    apercu.src = URL.createObjectURL(f);
+    etatImage.hidden = false;
+    msgImage.textContent = "Lecture du texte de l'image sur votre appareil…";
+    LectureImage.lire(f, function (p) {
+      msgImage.textContent = "Lecture du texte de l'image sur votre appareil… " + Math.round(p * 100) + " %";
+    }).then(function (texte) {
+      texte = texte.trim();
+      if (!texte) {
+        msgImage.textContent = "Aucun texte n'a pu être lu dans cette image. Essayez une capture plus nette, ou recopiez le message.";
+        return;
+      }
+      champ.value = texte;
+      msgImage.textContent = "Texte lu dans l'image et placé ci-dessus. La lecture peut faire des erreurs : corrigez-le si besoin, puis relancez l'analyse.";
+      afficher(Detecteur.analyser(texte, REGLES));
+      zone.scrollIntoView({ behavior: "smooth", block: "start" });
+    }).catch(function () {
+      msgImage.textContent = "L'image n'a pas pu être lue. Essayez une autre capture, ou recopiez le message.";
+    }).then(function () { lectureEnCours = false; });
+  }
+
+  document.getElementById("ajouter-image").addEventListener("click", function () { fichier.click(); });
+  fichier.addEventListener("change", function () { traiterImage(fichier.files[0]); fichier.value = ""; });
+  champ.addEventListener("paste", function (e) {
+    var items = (e.clipboardData && e.clipboardData.items) || [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].kind === "file" && /^image\//.test(items[i].type)) { e.preventDefault(); traiterImage(items[i].getAsFile()); return; }
+    }
+  });
+  ["dragenter", "dragover"].forEach(function (t) {
+    depot.addEventListener(t, function (e) { e.preventDefault(); depot.classList.add("survol"); });
+  });
+  ["dragleave", "drop"].forEach(function (t) {
+    depot.addEventListener(t, function () { depot.classList.remove("survol"); });
+  });
+  depot.addEventListener("drop", function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f && /^image\//.test(f.type)) { e.preventDefault(); traiterImage(f); }
+  });
+
+  // Lien vers une image : on prévient sans l'ouvrir
+  var reLienImage = /(https?:\/\/|www\.)\S+\.(jpe?g|png|gif|webp|heic|bmp)(\?\S*)?(\s|$)/i;
+  function verifierLienImage() { noteLienImage.hidden = !reLienImage.test(champ.value + " "); }
+  champ.addEventListener("input", verifierLienImage);
   document.getElementById("exemples").addEventListener("click", function (e) {
     var b = e.target.closest("button[data-exemple]");
     if (!b) return;
