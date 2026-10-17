@@ -45,7 +45,7 @@ var LectureImage = (function () {
         return Tesseract.createWorker("fra", 1, {
           workerPath: base + "worker.min.js",
           corePath: base + "core/",
-          langPath: base + "lang/",
+          langPath: window.LECTURE_IMAGE_LANGUES || base + "lang/",
           cacheMethod: "none",
           logger: function (m) { if (m.status === "recognizing text") suivi(m.progress); }
         });
