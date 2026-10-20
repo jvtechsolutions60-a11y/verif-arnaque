@@ -2,6 +2,8 @@
 
 Page web gratuite de JVTECH Solutions : on colle un SMS, un mail ou un lien suspect et on obtient un verdict (risque faible, moyen ou élevé), les raisons repérées et les gestes à faire. Tout se passe dans le navigateur : rien n'est envoyé ni enregistré, aucun cookie, aucun outil de mesure.
 
+Version actuelle : **1.2.0** (voir `CHANGELOG.md`).
+
 ## Fichiers
 
 - `index.html` : la page complète (textes, style, moteur d'analyse). S'ouvre directement dans un navigateur, sans serveur.
