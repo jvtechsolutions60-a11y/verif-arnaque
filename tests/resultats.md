@@ -1,6 +1,6 @@
 # Résultats des tests
 
-Règles version 2026-10. 29 messages sur 29 ont le verdict attendu.
+Règles version 2026-10. 31 messages sur 31 ont le verdict attendu.
 
 Relancer : `node tests/lancer-tests.js` depuis le dossier du projet. Les messages sont dans `tests/messages.json` (A = arnaque, L = légitime).
 
@@ -24,6 +24,8 @@ Relancer : `node tests/lancer-tests.js` depuis le dossier du projet. Les message
 | A16 | Numéro surtaxé | Moyen | Moyen | 3 | numero_surtaxe | oui |
 | A17 | Faux emploi | Moyen | Moyen | 3 | argent_facile | oui |
 | A18 | Faux placement crypto | Moyen | Moyen | 3 | argent_facile | oui |
+| A19 | QR code d'une capture vers un faux site | Élevé | Élevé | 10 | paiement, domaine_suspect, organisme, piece_jointe | oui |
+| A20 | QR code seul vers un lien raccourci | Moyen | Moyen | 4 | piece_jointe, raccourci | oui |
 | L01 | Rendez-vous médical | Faible | Faible | 0 | aucun | oui |
 | L02 | Code de connexion (OTP) | Faible | Faible | 0 | aucun | oui |
 | L03 | Message familial | Faible | Faible | 0 | aucun | oui |

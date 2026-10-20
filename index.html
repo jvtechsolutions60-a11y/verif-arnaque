@@ -9,292 +9,10 @@
 <meta name="description" content="Collez un SMS, un mail ou un lien suspect : l'analyse se fait sur votre appareil, rien n'est envoyé ni enregistré. Une initiative de JVTECH Solutions.">
 <meta name="robots" content="index,follow">
 <meta name="theme-color" content="#0f3561">
-<meta name="version" content="1.2.0">
-<style>
-/* Mise en page : un bandeau bleu de confiance en haut, puis une carte de
-   saisie qui le chevauche, le verdict en jauge à trois niveaux, et un bas
-   de page discret. Une seule colonne, pensée pour le téléphone d'abord.
-   Polices système : aucune police chargée depuis un service externe. */
-:root {
-  --bg: #f2f5f9;
-  --surface: #ffffff;
-  --surface-2: #f7f9fc;
-  --fg: #0f1f33;
-  --muted: #52637a;
-  --line: #d9e1eb;
-  --accent: #1B4F8C;
-  --accent-fg: #ffffff;
-  --accent-soft: #e7eef8;
-  --hero: #0f3561;
-  --hero-2: #1B4F8C;
-  --hero-fg: #ffffff;
-  --hero-muted: #c4d5ea;
-  --focus: #2f7fd1;
-  --ombre: 0 1px 2px rgba(15, 31, 51, .06), 0 12px 32px -8px rgba(15, 31, 51, .18);
-
-  --ok: #1d7a3b;      --ok-bg: #e6f4eb;
-  --warn: #9a5200;    --warn-bg: #fdf0df;
-  --risk: #b3261e;    --risk-bg: #fbe8e6;
-
-  --marque: #1B4F8C;
-  --font-text: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --radius: 14px;
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0b131e; --surface: #132133; --surface-2: #0f1b2a; --fg: #e6edf6; --muted: #9fb0c4; --line: #26384f;
-    --accent: #7fb3ea; --accent-fg: #0b1a2c; --accent-soft: #15283f;
-    --hero: #0a2443; --hero-2: #143e70; --hero-fg: #ffffff; --hero-muted: #b4c8e2; --focus: #9cc8f2;
-    --ombre: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -8px rgba(0, 0, 0, .5);
-    --ok: #7fd49a; --ok-bg: #12301d; --warn: #f2b765; --warn-bg: #36260f; --risk: #f39b93; --risk-bg: #3a1916;
-    --marque: #2a6bb5;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0b131e; --surface: #132133; --surface-2: #0f1b2a; --fg: #e6edf6; --muted: #9fb0c4; --line: #26384f;
-  --accent: #7fb3ea; --accent-fg: #0b1a2c; --accent-soft: #15283f;
-  --hero: #0a2443; --hero-2: #143e70; --hero-fg: #ffffff; --hero-muted: #b4c8e2; --focus: #9cc8f2;
-  --ombre: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -8px rgba(0, 0, 0, .5);
-  --ok: #7fd49a; --ok-bg: #12301d; --warn: #f2b765; --warn-bg: #36260f; --risk: #f39b93; --risk-bg: #3a1916;
-  --marque: #2a6bb5;
-  color-scheme: dark;
-}
-
-* { box-sizing: border-box; }
-[hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--fg);
-  font: 400 1.0625rem/1.55 var(--font-text);
-}
-a { color: var(--accent); }
-:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
-.conteneur {
-  max-width: 42rem;
-  margin: 0 auto;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-h1, h2 { text-wrap: balance; }
-
-/* Bandeau */
-.bandeau {
-  position: relative;
-  overflow: hidden;
-  background: radial-gradient(120% 90% at 85% 0%, var(--hero-2) 0%, var(--hero) 60%);
-  color: var(--hero-fg);
-}
-.bandeau .conteneur { position: relative; padding-block: 1.25rem 5.5rem; }
-.filigrane {
-  position: absolute; right: -3rem; top: 2.5rem;
-  width: 15rem; height: 15rem; opacity: .07; pointer-events: none;
-}
-.logo { display: inline-flex; align-items: center; gap: .625rem; text-decoration: none; color: var(--hero-fg); }
-.logo svg { flex: none; filter: drop-shadow(0 2px 6px rgba(0,0,0,.25)); }
-.logo-texte { display: flex; flex-direction: column; line-height: 1.1; }
-.logo-nom { font-size: 1.25rem; font-weight: 800; letter-spacing: -.01em; }
-.logo-nom span { color: #9cc4f2; }
-.logo-sous { font-size: .6875rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--hero-muted); margin-top: .2rem; }
-.bandeau h1 {
-  font-size: clamp(2rem, 8vw, 2.875rem);
-  line-height: 1.08;
-  letter-spacing: -.02em;
-  font-weight: 800;
-  margin: 2rem 0 .75rem;
-  max-width: 20ch;
-}
-.sous-titre { margin: 0; color: var(--hero-muted); font-size: 1.0625rem; max-width: 34rem; }
-.garanties { list-style: none; margin: 1.25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
-.garanties li {
-  display: inline-flex; align-items: center; gap: .4rem;
-  padding: .375rem .75rem; border-radius: 999px;
-  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
-  font-size: .875rem; font-weight: 600;
-}
-.garanties svg { flex: none; color: #9fe3b5; }
-
-/* Carte de saisie */
-.principal { display: flex; flex-direction: column; gap: 1.5rem; padding-block: 0 2.5rem; }
-.carte {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--ombre);
-}
-.saisie { margin-top: -4rem; position: relative; padding: 1.25rem; display: flex; flex-direction: column; gap: .875rem; }
-label[for="message"] { font-weight: 700; font-size: 1.0625rem; }
-.depot { display: flex; flex-direction: column; gap: .375rem; }
-textarea {
-  width: 100%;
-  min-height: 9.5rem;
-  resize: vertical;
-  padding: .875rem 1rem;
-  border: 1.5px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface-2);
-  color: var(--fg);
-  font: inherit;
-  line-height: 1.45;
-}
-textarea::placeholder { color: var(--muted); opacity: .85; }
-textarea:focus { border-color: var(--accent); background: var(--surface); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
-.depot.survol textarea { border-color: var(--accent); border-style: dashed; background: var(--accent-soft); }
-.depot-aide { margin: 0; font-size: .875rem; color: var(--muted); }
-.actions { display: grid; grid-template-columns: 1fr 1fr; gap: .625rem; }
-button {
-  font: inherit; font-weight: 600;
-  min-height: 3rem;
-  padding: .625rem 1rem;
-  border-radius: 10px;
-  cursor: pointer;
-}
-.btn-principal {
-  grid-column: 1 / -1;
-  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  min-height: 3.5rem;
-  border: 0;
-  background: var(--accent);
-  color: var(--accent-fg);
-  font-size: 1.125rem; font-weight: 700;
-  box-shadow: 0 6px 16px -6px rgba(27, 79, 140, .55);
-  transition: transform .1s ease, filter .15s ease;
-}
-.btn-principal:hover { filter: brightness(1.08); }
-.btn-principal:active { transform: translateY(1px); }
-.btn-secondaire {
-  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  border: 1.5px solid var(--line);
-  background: var(--surface);
-  color: var(--fg);
-}
-.btn-secondaire:hover { border-color: var(--accent); color: var(--accent); }
-.exemples {
-  display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
-  padding-top: .875rem; border-top: 1px solid var(--line);
-  font-size: .875rem; color: var(--muted);
-}
-.exemples span { width: 100%; }
-.exemples button {
-  min-height: 2.25rem; padding: .25rem .875rem; font-weight: 600; font-size: .875rem;
-  border: 1px solid var(--line); background: var(--surface-2); color: var(--fg); border-radius: 999px;
-}
-.exemples button:hover { border-color: var(--accent); color: var(--accent); }
-.erreur { margin: 0; color: var(--risk); font-size: .9375rem; font-weight: 600; }
-.image-etat {
-  display: flex; gap: .75rem; align-items: center;
-  padding: .625rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2);
-}
-.image-etat img { width: 3.5rem; height: 3.5rem; object-fit: cover; border-radius: 6px; flex: none; background: var(--bg); }
-.image-etat p { margin: 0; font-size: .9375rem; min-width: 0; }
-.note { margin: 0; padding: .625rem .875rem; font-size: .9375rem; background: var(--warn-bg); color: var(--fg); border-radius: 8px; }
-
-/* Résultat */
-.resultat { display: flex; flex-direction: column; gap: 1rem; scroll-margin-top: 1rem; }
-.verdict { overflow: hidden; }
-.verdict-tete {
-  display: flex; gap: .875rem; align-items: flex-start;
-  padding: 1.125rem 1.25rem;
-  border-bottom: 1px solid var(--line);
-}
-.verdict-tete svg { flex: none; width: 2.5rem; height: 2.5rem; }
-.verdict-texte { min-width: 0; }
-.verdict-niveau { display: block; font-size: 1.5rem; font-weight: 800; line-height: 1.2; letter-spacing: -.01em; }
-.verdict-tete p { margin: .375rem 0 0; color: var(--fg); }
-.niveau-faible .verdict-tete { background: var(--ok-bg); color: var(--ok); }
-.niveau-moyen .verdict-tete { background: var(--warn-bg); color: var(--warn); }
-.niveau-eleve .verdict-tete { background: var(--risk-bg); color: var(--risk); }
-
-.jauge { padding: 1rem 1.25rem 1.125rem; display: flex; flex-direction: column; gap: .5rem; }
-.jauge-barres { display: grid; grid-template-columns: repeat(3, 1fr); gap: .375rem; }
-.jauge-barres span {
-  height: .625rem; border-radius: 999px; background: var(--line);
-}
-.jauge-libelles { display: grid; grid-template-columns: repeat(3, 1fr); gap: .375rem; font-size: .8125rem; color: var(--muted); font-weight: 600; }
-.jauge-libelles span:nth-child(2) { text-align: center; }
-.jauge-libelles span:nth-child(3) { text-align: right; }
-.niveau-faible .jauge-barres span:nth-child(1) { background: var(--ok); }
-.niveau-moyen .jauge-barres span:nth-child(-n+2) { background: var(--warn); }
-.niveau-eleve .jauge-barres span { background: var(--risk); }
-.niveau-faible .jauge-libelles span:nth-child(1) { color: var(--ok); }
-.niveau-moyen .jauge-libelles span:nth-child(2) { color: var(--warn); }
-.niveau-eleve .jauge-libelles span:nth-child(3) { color: var(--risk); }
-.score { font-size: .875rem; color: var(--muted); margin: .25rem 0 0; font-variant-numeric: tabular-nums; }
-
-.bloc { padding: 1.125rem 1.25rem 1.25rem; display: flex; flex-direction: column; gap: .75rem; }
-.bloc h2 { font-size: 1.1875rem; margin: 0; }
-.raisons, .gestes { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5rem; }
-.raisons li {
-  display: grid; grid-template-columns: 1fr auto; gap: .25rem .75rem; align-items: start;
-  padding: .75rem .875rem;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  min-width: 0;
-}
-.raisons .points {
-  grid-column: 2; grid-row: 1;
-  font-size: .8125rem; font-weight: 700; font-variant-numeric: tabular-nums;
-  padding: .125rem .5rem; border-radius: 999px;
-  background: var(--accent-soft); color: var(--accent);
-}
-.raisons .extrait { grid-column: 1 / -1; font-size: .875rem; color: var(--muted); overflow-wrap: anywhere; }
-.raisons .extrait code { font-family: var(--font-mono); font-size: .8125rem; }
-.raisons li.aucune { display: block; color: var(--muted); }
-.gestes { counter-reset: geste; gap: .75rem; }
-.gestes li { display: flex; gap: .75rem; align-items: flex-start; counter-increment: geste; }
-.gestes li::before {
-  content: counter(geste);
-  flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%;
-  display: grid; place-items: center;
-  background: var(--accent); color: var(--accent-fg);
-  font-size: .875rem; font-weight: 700; font-variant-numeric: tabular-nums;
-}
-.gestes li span { padding-top: .1rem; min-width: 0; }
-
-/* Bas de page */
-footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; padding-bottom: 2rem; }
-.avertissement {
-  margin: 0; padding: .875rem 1rem;
-  display: flex; gap: .625rem; align-items: flex-start;
-  border-radius: 10px; background: var(--surface); border: 1px solid var(--line);
-}
-.avertissement svg { flex: none; margin-top: .15rem; color: var(--muted); }
-.jvtech {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .875rem 1.25rem;
-  padding: 1.125rem 1.25rem;
-  border-radius: var(--radius);
-  background: var(--accent-soft);
-}
-.jvtech div { display: flex; flex-direction: column; gap: .2rem; min-width: 0; flex: 1 1 16rem; }
-.jvtech strong { font-size: 1.0625rem; }
-.jvtech span { color: var(--muted); }
-.jvtech a {
-  flex: none; display: inline-flex; align-items: center; min-height: 2.75rem; padding: .5rem 1rem;
-  border-radius: 10px; border: 1.5px solid var(--accent); color: var(--accent);
-  font-weight: 700; text-decoration: none;
-}
-.jvtech a:hover { background: var(--accent); color: var(--accent-fg); }
-.mentions { color: var(--muted); font-size: .8125rem; margin: 0; text-align: center; }
-
-@media (min-width: 720px) {
-  .bandeau .conteneur { padding-block: 1.5rem 6rem; }
-  .bandeau h1 { margin-top: 2.75rem; }
-  .filigrane { right: 2rem; top: 1.5rem; width: 18rem; height: 18rem; }
-  .saisie { padding: 1.75rem; }
-  .actions { grid-template-columns: 2fr 1fr 1fr; }
-  .btn-principal { grid-column: auto; }
-  .exemples span { width: auto; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .resultat:not([hidden]) { animation: apparition .3s ease-out; }
-  @keyframes apparition { from { opacity: .3; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-}
-</style>
+<meta name="version" content="1.3.0">
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="logo/icone-180.png">
 </head>
 <body>
 <header class="bandeau">
@@ -317,6 +35,10 @@ footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; 
       <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>Aucun cookie</li>
       <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>Gratuit</li>
     </ul>
+    <nav class="raccourcis" aria-label="Raccourcis">
+      <a href="#deja-pris">Déjà piégé ? Les bons réflexes</a>
+      <a href="arnaques.html">Les arnaques du moment</a>
+    </nav>
   </div>
 </header>
 
@@ -380,6 +102,65 @@ footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; 
       <h2>Que faire ?</h2>
       <ol class="gestes" id="gestes"></ol>
     </div>
+
+    <div class="carte bloc partage">
+      <h2>Prévenir un proche</h2>
+      <p class="bloc-aide">Partagez le verdict à quelqu'un qui a reçu le même message. Le texte de votre message n'est pas inclus.</p>
+      <div class="partage-boutons">
+        <button type="button" class="btn-secondaire" id="partager">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="2.5"></circle><circle cx="6" cy="12" r="2.5"></circle><circle cx="18" cy="19" r="2.5"></circle><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"></path></svg>
+          Partager le résultat
+        </button>
+        <button type="button" class="btn-secondaire" id="copier">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>
+          Copier
+        </button>
+      </div>
+      <p class="partage-etat" id="partage-etat" role="status"></p>
+    </div>
+  </section>
+
+  <section class="carte bloc victime" id="deja-pris" aria-labelledby="titre-deja-pris">
+    <h2 id="titre-deja-pris">Déjà cliqué, payé ou donné un code&nbsp;?</h2>
+    <p class="bloc-aide">Pas de panique, mais agissez vite. Choisissez ce qui vous est arrivé.</p>
+    <details>
+      <summary>J'ai donné ma carte bancaire, un code reçu par SMS, ou j'ai payé</summary>
+      <ol class="gestes">
+        <li><span><strong>Appelez tout de suite votre banque</strong> pour faire opposition sur votre carte : le numéro est au dos de la carte ou dans l'application. À défaut, le serveur interbancaire d'opposition répond 7 jours sur 7 au <a href="tel:+33892705705">0 892 705 705</a> (appel payant).</span></li>
+        <li><span>Si quelqu'un vous appelle « de la part de votre banque », raccrochez et rappelez vous-même le numéro habituel.</span></li>
+        <li><span>Demandez par écrit à votre banque de contester les paiements que vous n'avez pas autorisés.</span></li>
+        <li><span>Portez plainte au commissariat ou à la gendarmerie avec vos captures d'écran. Pour un conseil, Info Escroqueries répond au <a href="tel:+33805805817">0 805 805 817</a> (appel gratuit).</span></li>
+      </ol>
+    </details>
+    <details>
+      <summary>J'ai saisi un identifiant et un mot de passe</summary>
+      <ol class="gestes">
+        <li><span><strong>Changez tout de suite ce mot de passe</strong>, en passant par le site ou l'application officielle, jamais par le lien du message.</span></li>
+        <li><span>Changez-le aussi partout où vous utilisiez le même.</span></li>
+        <li><span>Activez la double vérification (un code de confirmation à chaque connexion) si le service le propose.</span></li>
+        <li><span>Vérifiez l'activité récente du compte et vos coordonnées (adresse mail, téléphone) : l'escroc a pu les changer.</span></li>
+        <li><span>S'il s'agit de votre messagerie ou d'un réseau social, prévenez vos contacts de se méfier des messages envoyés en votre nom.</span></li>
+      </ol>
+    </details>
+    <details>
+      <summary>J'ai installé une application ou laissé quelqu'un prendre la main sur mon appareil</summary>
+      <ol class="gestes">
+        <li><span><strong>Raccrochez et coupez internet</strong> (mode avion ou Wi-Fi coupé).</span></li>
+        <li><span>Désinstallez l'application installée à la demande de l'inconnu (AnyDesk, TeamViewer ou autre).</span></li>
+        <li><span>Depuis un autre appareil, changez vos mots de passe importants : banque, messagerie.</span></li>
+        <li><span>Prévenez votre banque, surtout si vous vous êtes connecté à votre compte pendant l'appel.</span></li>
+        <li><span>Faites vérifier l'appareil avant de vous en resservir : <a href="https://jvtechsolutions.fr/" rel="noopener">JVTECH Solutions</a> peut le contrôler et le nettoyer.</span></li>
+      </ol>
+    </details>
+    <details>
+      <summary>J'ai envoyé une pièce d'identité, un RIB ou des informations personnelles</summary>
+      <ol class="gestes">
+        <li><span><strong>Portez plainte</strong> en joignant les preuves : le récépissé vous protégera si quelqu'un utilise votre identité.</span></li>
+        <li><span>Méfiez-vous des appels qui suivront : les escrocs se servent de ces informations pour paraître crédibles.</span></li>
+        <li><span>Surveillez vos comptes et votre courrier (crédits ou abonnements ouverts à votre nom).</span></li>
+      </ol>
+    </details>
+    <p class="bloc-aide">Dans tous les cas, gardez le message et vos captures d'écran, et décrivez votre situation sur <a href="https://www.17cyber.gouv.fr/" rel="noopener">17Cyber</a>, le service officiel et gratuit d'aide aux victimes.</p>
   </section>
 
   <footer>
@@ -394,7 +175,11 @@ footer { display: flex; flex-direction: column; gap: 1rem; font-size: .9375rem; 
       </div>
       <a href="https://jvtechsolutions.fr/" rel="noopener">Découvrir JVTECH</a>
     </div>
-    <p class="mentions"><a href="https://jvtechsolutions.fr/mentions-legales/" rel="noopener">Mentions légales</a> · Version <span id="version-logiciel">1.2.0</span> · Règles <span id="version-regles">—</span></p>
+    <div class="installer" id="bloc-installer" hidden>
+      <span>Gardez Vérif'Arnaque sur votre écran d'accueil, il marche même sans internet.</span>
+      <button type="button" class="btn-secondaire" id="installer">Installer l'appli</button>
+    </div>
+    <p class="mentions"><a href="arnaques.html">Arnaques du moment</a> · <a href="https://jvtechsolutions.fr/mentions-legales/" rel="noopener">Mentions légales</a> · Version <span id="version-logiciel">1.3.0</span> · Règles <span id="version-regles">—</span></p>
   </footer>
 </main>
 
@@ -572,13 +357,14 @@ if (typeof module !== "undefined") { module.exports = Detecteur; }
       "Ne cliquez pas sur le lien et ne répondez pas.",
       "Vérifiez auprès de l'organisme par son site officiel ou son numéro habituel, jamais par celui indiqué dans le message.",
       "S'il s'agit d'un SMS, transférez-le gratuitement au 33700 (" + L.l33700 + ").",
-      "S'il s'agit d'un mail, signalez-le sur " + L.spam + "."
+      "S'il s'agit d'un mail, signalez-le sur " + L.spam + ".",
+      "Vous avez déjà cliqué ou répondu ? <a href=\"#deja-pris\">Voici les bons réflexes</a>."
     ],
     eleve: [
       "Ne cliquez sur rien, ne donnez aucun code et ne payez rien.",
       "Transférez le SMS au 33700 (" + L.l33700 + ") ou signalez le mail sur " + L.spam + ", puis supprimez-le.",
       "Signalez l'arnaque sur " + L.cyber + ", le service officiel d'aide aux victimes.",
-      "Si vous avez déjà saisi des informations bancaires ou un code, appelez tout de suite votre banque pour bloquer votre carte."
+      "Si vous avez déjà saisi des informations bancaires ou un code, appelez tout de suite votre banque pour bloquer votre carte. <a href=\"#deja-pris\">Voir tous les bons réflexes</a>."
     ]
   };
   var ICONES = {
@@ -599,6 +385,7 @@ if (typeof module !== "undefined") { module.exports = Detecteur; }
 
   function echapperHTML(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
+  var dernier = null;
   function afficher(res) {
     var t = TEXTES[res.niveau];
     var v = document.getElementById("verdict");
@@ -621,6 +408,8 @@ if (typeof module !== "undefined") { module.exports = Detecteur; }
     // Conseils propres aux signaux repérés, puis gestes du niveau
     var propres = res.signaux.filter(function (x) { return x.conseil; }).map(function (x) { return echapperHTML(x.conseil); });
     document.getElementById("gestes").innerHTML = propres.concat(GESTES[res.niveau]).map(function (g) { return "<li><span>" + g + "</span></li>"; }).join("");
+    dernier = res;
+    document.getElementById("partage-etat").textContent = "";
     zone.hidden = false;
   }
 
@@ -659,19 +448,26 @@ if (typeof module !== "undefined") { module.exports = Detecteur; }
     msgImage.textContent = "Lecture du texte de l'image sur votre appareil…";
     LectureImage.lire(f, function (p) {
       msgImage.textContent = "Lecture du texte de l'image sur votre appareil… " + Math.round(p * 100) + " %";
-    }).then(function (texte) {
-      texte = texte.trim();
-      if (!texte) {
+    }).then(function (r) {
+      var texte = (r.texte || "").trim();
+      var codes = r.codes;
+      if (r.texte === null && !codes.length) {
+        msgImage.textContent = "L'image n'a pas pu être lue. Essayez une autre capture, ou recopiez le message.";
+        return;
+      }
+      if (!texte && !codes.length) {
         msgImage.textContent = "Aucun texte n'a pu être lu dans cette image. Essayez une capture plus nette, ou recopiez le message.";
         return;
       }
+      // Le contenu du QR code est ajouté au texte pour que son lien soit analysé, sans jamais l'ouvrir
+      codes.forEach(function (c) { texte += (texte ? "\n\n" : "") + "Lien du QR code : " + c; });
       champ.value = texte;
-      msgImage.textContent = "Texte lu dans l'image et placé ci-dessus. La lecture peut faire des erreurs : corrigez-le si besoin, puis relancez l'analyse.";
+      msgImage.textContent = codes.length
+        ? "QR code trouvé dans l'image : son contenu a été ajouté ci-dessus pour être vérifié. Nous ne l'avons pas ouvert, ne le scannez pas avant d'avoir lu le verdict."
+        : "Texte lu dans l'image et placé ci-dessus. La lecture peut faire des erreurs : corrigez-le si besoin, puis relancez l'analyse.";
       afficher(Detecteur.analyser(texte, REGLES));
       zone.scrollIntoView({ behavior: "smooth", block: "start" });
-    }).catch(function () {
-      msgImage.textContent = "L'image n'a pas pu être lue. Essayez une autre capture, ou recopiez le message.";
-    }).then(function () { lectureEnCours = false; });
+    }).catch(function () {}).then(function () { lectureEnCours = false; });
   }
 
   document.getElementById("ajouter-image").addEventListener("click", function () { fichier.click(); });
@@ -704,6 +500,75 @@ if (typeof module !== "undefined") { module.exports = Detecteur; }
     erreur.hidden = true;
     afficher(Detecteur.analyser(champ.value, REGLES));
   });
+
+  /* Partage du verdict : seuls le niveau et les raisons partent, jamais le message */
+  var etatPartage = document.getElementById("partage-etat");
+  var adresseSite = /^https?:$/.test(location.protocol) && window.top === window ? location.origin + location.pathname.replace(/index\.html$/, "") : "";
+  function texteResultat() {
+    var t = "Vérif'Arnaque : " + TEXTES[dernier.niveau].titre.toLowerCase() + " pour ce message.";
+    if (dernier.signaux.length) t += "\n" + dernier.signaux.map(function (s) { return "• " + s.raison; }).join("\n");
+    t += "\n" + TEXTES[dernier.niveau].message;
+    t += "\nVérifiez vos messages gratuitement, rien n'est envoyé" + (adresseSite ? " : " + adresseSite : " sur Vérif'Arnaque de JVTECH Solutions.");
+    return t;
+  }
+  function copier(t) {
+    var ok = function () { etatPartage.textContent = "Résultat copié : collez-le dans un SMS ou un mail."; };
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(t).then(ok, function () { copierAncien(t) ? ok() : echec(); });
+    }
+    copierAncien(t) ? ok() : echec();
+  }
+  function copierAncien(t) {
+    var z = document.createElement("textarea");
+    z.value = t; z.setAttribute("readonly", ""); z.style.position = "fixed"; z.style.opacity = "0";
+    document.body.appendChild(z); z.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(z);
+    return ok;
+  }
+  function echec() { etatPartage.textContent = "La copie n'a pas marché sur cet appareil."; }
+  document.getElementById("copier").addEventListener("click", function () { if (dernier) copier(texteResultat()); });
+  document.getElementById("partager").addEventListener("click", function () {
+    if (!dernier) return;
+    var t = texteResultat();
+    if (navigator.share) {
+      navigator.share({ title: "Vérif'Arnaque", text: t }).catch(function (e) { if (e && e.name !== "AbortError") copier(t); });
+    } else copier(t);
+  });
+
+  /* Installation sur l'écran d'accueil et fonctionnement hors connexion */
+  var invite = null;
+  var blocInstaller = document.getElementById("bloc-installer");
+  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); invite = e; blocInstaller.hidden = false; });
+  window.addEventListener("appinstalled", function () { blocInstaller.hidden = true; });
+  document.getElementById("installer").addEventListener("click", function () {
+    if (!invite) return;
+    invite.prompt();
+    invite.userChoice.then(function () { invite = null; blocInstaller.hidden = true; });
+  });
+  var local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  if ("serviceWorker" in navigator && window.top === window && (location.protocol === "https:" || local)) {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  }
+
+  /* Message ou capture partagé depuis une autre appli (appli installée sur Android).
+     Le service de la page le garde sur l'appareil le temps de l'afficher ici. */
+  if (/[?&]partage=1/.test(location.search) && window.caches) {
+    history.replaceState(null, "", location.pathname);
+    caches.open("verif-partage").then(function (c) {
+      return Promise.all([c.match("texte"), c.match("image")]).then(function (r) {
+        c.delete("texte"); c.delete("image");
+        return Promise.all([r[0] ? r[0].text() : "", r[1] ? r[1].blob() : null]);
+      });
+    }).then(function (r) {
+      if (r[1] && /^image\//.test(r[1].type)) { traiterImage(r[1]); return; }
+      if (r[0].trim()) {
+        champ.value = r[0].trim();
+        verifierLienImage();
+        afficher(Detecteur.analyser(champ.value, REGLES));
+      }
+    }).catch(function () {});
+  }
 
 })();
 </script>

@@ -126,6 +126,20 @@
   "texte": "Investissez 250€ en cryptomonnaie et gagnez 3000€ en une semaine, rendement garanti."
  },
  {
+  "id": "A19",
+  "type": "arnaque",
+  "attendu": "eleve",
+  "titre": "QR code d'une capture vers un faux site",
+  "texte": "Votre colis est bloqué au dépôt. Scannez le code ci-dessous pour régler les frais.\n\nLien du QR code : https://chronopost-suivi-colis.top/paiement"
+ },
+ {
+  "id": "A20",
+  "type": "arnaque",
+  "attendu": "moyen",
+  "titre": "QR code seul vers un lien raccourci",
+  "texte": "Lien du QR code : https://bit.ly/3xYzAbc"
+ },
+ {
   "id": "L01",
   "type": "legitime",
   "attendu": "faible",

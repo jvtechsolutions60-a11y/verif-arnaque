@@ -158,7 +158,7 @@ var REGLES = {
       points: 2,
       raison: "Le message pousse à ouvrir une pièce jointe ou à scanner un QR code.",
       mots: [
-        "qr code", "code qr", "scannez", "flashez", "ouvrez la piece jointe",
+        "qr code", "code qr", "lien du qr code", "scannez", "flashez", "ouvrez la piece jointe",
         "voir la piece jointe", "telechargez la facture", "telechargez le document"
       ],
       motifs: [

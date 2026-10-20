@@ -9,8 +9,15 @@
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
 </IfModule>
 
-# Types de fichiers du moteur de lecture d'image
+# Types de fichiers du moteur de lecture d'image et de l'appli installable
 AddType application/wasm .wasm
+AddType application/manifest+json .webmanifest
+# Le service de l'appli doit toujours être relu, pour recevoir les nouvelles versions
+<Files "sw.js">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache"
+  </IfModule>
+</Files>
 <FilesMatch "\.traineddata\.gz$">
   RemoveEncoding .gz
   ForceType application/octet-stream

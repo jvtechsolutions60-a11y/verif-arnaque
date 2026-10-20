@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Les arnaques du moment par SMS, mail et téléphone</title>
+<link rel="icon" href="logo/logo-icone.svg" type="image/svg+xml">
+<meta name="description" content="Faux colis, faux conseiller bancaire, fausse amende, faux proche, QR codes piégés : les arnaques qui circulent en France en ce moment, comment les reconnaître et le bon réflexe. Par JVTECH Solutions.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0f3561">
+<meta name="version" content="1.3.0">
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="logo/icone-180.png">
+<style>
+/* Propre à cette page : le sommaire et les fiches d'arnaques */
+.bandeau .conteneur { padding-block: 1.25rem 4.5rem; }
+.sommaire { margin-top: -3rem; position: relative; padding: 1.125rem 1.25rem; }
+.sommaire h2 { font-size: 1.0625rem; margin: 0 0 .625rem; }
+.sommaire ol { margin: 0; padding-left: 1.25rem; columns: 2 14rem; column-gap: 1.5rem; }
+.sommaire li { padding: .15rem 0; break-inside: avoid; }
+.fiche { padding: 1.125rem 1.25rem 1.25rem; display: flex; flex-direction: column; gap: .75rem; scroll-margin-top: 1rem; }
+.fiche h2 { font-size: 1.25rem; margin: 0; }
+.fiche .exemple {
+  margin: 0; padding: .75rem .875rem; border-left: 4px solid var(--risk);
+  background: var(--risk-bg); border-radius: 0 10px 10px 0; font-style: italic;
+}
+.fiche dl { margin: 0; display: flex; flex-direction: column; gap: .625rem; }
+.fiche dt { font-weight: 700; }
+.fiche dd { margin: .125rem 0 0; }
+.fiche .reflexe { background: var(--ok-bg); border-radius: 10px; padding: .625rem .875rem; }
+.fiche .reflexe dt { color: var(--ok); }
+.appel {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .875rem 1.25rem;
+  padding: 1.125rem 1.25rem;
+}
+.appel p { margin: 0; flex: 1 1 16rem; }
+.appel a.btn-principal { text-decoration: none; flex: none; padding-inline: 1.25rem; }
+.mise-a-jour { margin: .75rem 0 0; color: var(--hero-muted); font-size: .9375rem; }
+</style>
+</head>
+<body>
+<header class="bandeau">
+  <svg class="filigrane" viewBox="0 0 64 64" aria-hidden="true">
+    <path d="M32 4 54 11.5V29c0 14.5-9.4 25.2-22 31-12.6-5.8-22-16.5-22-31V11.5z" fill="#ffffff"></path>
+  </svg>
+  <div class="conteneur">
+    <a class="logo" href="./" aria-label="Vérif'Arnaque, retour à l'accueil">
+      <svg viewBox="0 0 64 64" width="42" height="42" aria-hidden="true">
+        <path d="M32 4 54 11.5V29c0 14.5-9.4 25.2-22 31-12.6-5.8-22-16.5-22-31V11.5z" fill="var(--marque)"></path>
+        <path d="M32 10.5 48 16v13c0 10.6-6.5 18.6-16 23.6V10.5z" fill="#ffffff" fill-opacity=".12"></path>
+        <path d="m21 31.5 7.5 7.5L44 23.5" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span class="logo-texte"><span class="logo-nom">Vérif<span>'Arnaque</span></span><span class="logo-sous">par JVTECH Solutions</span></span>
+    </a>
+    <h1>Les arnaques du moment</h1>
+    <p class="sous-titre">Celles qui circulent le plus en France par SMS, mail, téléphone et messagerie, avec le réflexe qui protège.</p>
+    <p class="mise-a-jour">Mise à jour : octobre 2026. Revue chaque trimestre.</p>
+  </div>
+</header>
+
+<main class="conteneur principal">
+
+  <nav class="carte sommaire" aria-labelledby="titre-sommaire">
+    <h2 id="titre-sommaire">Sommaire</h2>
+    <ol>
+      <li><a href="#colis">Faux colis et frais de livraison</a></li>
+      <li><a href="#banque">Faux conseiller bancaire</a></li>
+      <li><a href="#amende">Fausse amende ou péage impayé</a></li>
+      <li><a href="#ameli">Fausse carte Vitale ou Ameli</a></li>
+      <li><a href="#remboursement">Faux remboursement des impôts ou de la CAF</a></li>
+      <li><a href="#proche">« Maman, j'ai changé de numéro »</a></li>
+      <li><a href="#emploi">Faux emploi et missions payées</a></li>
+      <li><a href="#acheteur">Faux acheteur sur Leboncoin ou Vinted</a></li>
+      <li><a href="#qr">QR codes piégés</a></li>
+      <li><a href="#placement">Faux placements et cryptomonnaies</a></li>
+      <li><a href="#support">Faux support technique</a></li>
+    </ol>
+  </nav>
+
+  <article class="carte fiche" id="colis">
+    <h2>Faux colis et frais de livraison</h2>
+    <p class="exemple">« Votre colis est en attente. Réglez 1,99 € de frais de réexpédition sous 24 h, sinon il sera retourné. »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>Le petit montant rassure. Le lien mène à une fausse page de La Poste, Chronopost ou Mondial Relay qui récupère votre carte bancaire, puis un faux conseiller appelle pour « annuler » un gros paiement.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>Un transporteur ne demande jamais de payer des frais par SMS. Suivez votre colis uniquement avec le numéro donné par le site où vous avez acheté.</dd></div>
+    </dl>
+  </article>
+
+  <article class="carte fiche" id="banque">
+    <h2>Faux conseiller bancaire</h2>
+    <p class="exemple">« Ici le service fraude de votre banque. Une opération de 1 450 € a été détectée. Pour l'annuler, donnez-moi le code que vous allez recevoir. »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>L'appel peut sembler venir de votre banque, et l'escroc connaît souvent votre nom et vos dernières opérations. Le code que vous donnez valide en fait un paiement ou l'ajout de votre carte sur son téléphone.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>Raccrochez et rappelez vous-même le numéro au dos de votre carte. Votre banque ne vous demandera jamais un code, un mot de passe, ni de « mettre votre argent à l'abri » sur un autre compte.</dd></div>
+    </dl>
+  </article>
+
+  <article class="carte fiche" id="amende">
+    <h2>Fausse amende ou péage impayé</h2>
+    <p class="exemple">« Avis de contravention : vous avez un impayé de péage. Réglez 6,80 € avant majoration. »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>La menace de majoration presse à payer vite sur un faux site qui imite l'ANTAI ou une société d'autoroute.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>Une vraie amende arrive par courrier ou dans votre espace sur antai.gouv.fr. Pour un péage sans barrière, passez uniquement par le site de la société d'autoroute, tapé vous-même.</dd></div>
+    </dl>
+  </article>
+
+  <article class="carte fiche" id="ameli">
+    <h2>Fausse carte Vitale ou Ameli</h2>
+    <p class="exemple">« Votre carte Vitale arrive à expiration. Commandez la nouvelle avant le 31 pour garder vos remboursements. »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>La page imite Ameli et demande vos coordonnées bancaires « pour les frais d'envoi ». Vos informations servent ensuite à d'autres arnaques plus crédibles.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>La carte Vitale n'expire pas et son renouvellement est gratuit. Connectez-vous à votre compte en tapant ameli.fr vous-même.</dd></div>
+    </dl>
+  </article>
+
+  <article class="carte fiche" id="remboursement">
+    <h2>Faux remboursement des impôts ou de la CAF</h2>
+    <p class="exemple">« Vous êtes éligible à un remboursement de 248,30 €. Confirmez vos informations pour le recevoir. »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>L'appât de l'argent fait oublier la prudence : la page demande votre carte bancaire, que l'administration n'utilise jamais pour rembourser.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>Un remboursement arrive directement sur le compte déjà connu de l'administration. Vérifiez dans votre espace sur impots.gouv.fr ou caf.fr.</dd></div>
+    </dl>
+  </article>
+
+  <article class="carte fiche" id="proche">
+    <h2>« Maman, j'ai changé de numéro »</h2>
+    <p class="exemple">« Coucou maman, j'ai cassé mon téléphone, c'est mon nouveau numéro. Tu peux me faire un virement ? C'est urgent. »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>L'escroc se fait passer pour un enfant ou un proche sur WhatsApp ou par SMS, et joue sur l'émotion pour obtenir un virement rapide.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>Appelez votre proche à son ancien numéro, ou posez une question dont seul lui connaît la réponse. Ne faites aucun virement avant.</dd></div>
+    </dl>
+  </article>
+
+  <article class="carte fiche" id="emploi">
+    <h2>Faux emploi et missions payées</h2>
+    <p class="exemple">« Bonjour, nous recrutons à domicile : 50 à 300 € par jour pour aimer des vidéos. Contactez-nous sur WhatsApp. »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>Les premières missions rapportent quelques euros, puis on vous demande de « déposer » de l'argent pour débloquer vos gains. Cet argent est perdu.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>Un vrai employeur ne vous contacte pas au hasard et ne vous demande jamais de payer pour travailler.</dd></div>
+    </dl>
+  </article>
+
+  <article class="carte fiche" id="acheteur">
+    <h2>Faux acheteur sur Leboncoin ou Vinted</h2>
+    <p class="exemple">« Je prends votre article. J'ai payé avec la livraison sécurisée, cliquez sur ce lien pour recevoir l'argent. »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>Le lien imite la plateforme et vous fait saisir votre carte bancaire « pour être payé ». En réalité, c'est vous qui payez.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>Restez dans la messagerie de l'application. Pour recevoir de l'argent, on n'a jamais besoin de donner sa carte.</dd></div>
+    </dl>
+  </article>
+
+  <article class="carte fiche" id="qr">
+    <h2>QR codes piégés</h2>
+    <p class="exemple">Un autocollant posé sur un parcmètre ou une borne de recharge, ou un faux courrier : « Scannez ce QR code pour régulariser votre dossier. »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>On ne voit pas où mène un QR code avant de l'ouvrir. Il conduit vers une fausse page de paiement ou de connexion.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>Méfiez-vous d'un QR code collé par-dessus un autre ou reçu sans l'avoir demandé. Ajoutez une capture dans Vérif'Arnaque : le lien caché est lu sans être ouvert.</dd></div>
+    </dl>
+  </article>
+
+  <article class="carte fiche" id="placement">
+    <h2>Faux placements et cryptomonnaies</h2>
+    <p class="exemple">Une publicité avec une vidéo d'une personnalité : « Grâce à cette plateforme, j'ai doublé mon épargne en trois mois. »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>La vidéo est truquée. Un « conseiller » vous montre des gains qui n'existent pas, puis vous demande toujours plus d'argent, et des frais pour retirer.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>Aucun placement n'est garanti sans risque. Vérifiez la société sur les listes noires de l'AMF (amf-france.org) avant tout versement.</dd></div>
+    </dl>
+  </article>
+
+  <article class="carte fiche" id="support">
+    <h2>Faux support technique</h2>
+    <p class="exemple">Une page bloque l'écran avec une alarme : « Virus détecté ! Appelez immédiatement le support Microsoft au 09… »</p>
+    <dl>
+      <div><dt>Le piège</dt><dd>Le faux technicien vous fait installer un logiciel pour prendre la main sur l'ordinateur, puis facture un faux dépannage ou accède à votre banque.</dd></div>
+      <div class="reflexe"><dt>Le bon réflexe</dt><dd>N'appelez jamais un numéro affiché par une alerte. Fermez le navigateur (redémarrez si besoin). Un doute sur votre ordinateur ? <a href="https://jvtechsolutions.fr/" rel="noopener">JVTECH Solutions</a> le vérifie près de chez vous, à Beauvais.</dd></div>
+    </dl>
+  </article>
+
+  <section class="carte appel">
+    <p><strong>Un message vous fait douter ?</strong> Collez-le dans Vérif'Arnaque : l'analyse se fait sur votre appareil, rien n'est envoyé.</p>
+    <a class="btn-principal" href="./">Vérifier un message</a>
+  </section>
+
+  <footer>
+    <p class="avertissement">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"></circle><path d="M12 11v5.5"></path><path d="M12 7.5h.01"></path></svg>
+      <span>Déjà piégé ? Retrouvez <a href="./#deja-pris">les bons réflexes</a> et décrivez votre situation sur <a href="https://www.17cyber.gouv.fr/" rel="noopener">17Cyber</a>, le service officiel d'aide aux victimes.</span>
+    </p>
+    <p class="mentions"><a href="./">Vérif'Arnaque</a> · <a href="https://jvtechsolutions.fr/mentions-legales/" rel="noopener">Mentions légales</a> · Version 1.3.0</p>
+  </footer>
+</main>
+<script>
+if ("serviceWorker" in navigator && window.top === window && (location.protocol === "https:" || location.hostname === "localhost")) {
+  navigator.serviceWorker.register("sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>
